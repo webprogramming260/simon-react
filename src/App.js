@@ -1,23 +1,77 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 
 function App() {
   return (
     <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>This is my code</p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
-      </header>
+      <nav>
+        <ul>
+          <li>
+            <Link to='/'>Home</Link>
+          </li>
+          <li>
+            <Link to='/shop'>Shop</Link>
+          </li>
+          <li>
+            <Link to='/about'>About</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path='/' element={<Home />} exact />
+        <Route path='/about' element={<About />} />
+        <Route path='/shop' element={<Shop />} />
+        <Route component={Home} />
+      </Routes>
     </div>
   );
+}
+
+class Home extends React.Component {
+  render() {
+    return (
+      <button
+        className='square'
+        onClick={() => {
+          console.log('click');
+        }}
+      >
+        home
+      </button>
+    );
+  }
+}
+
+class About extends React.Component {
+  render() {
+    return (
+      <button
+        className='square'
+        onClick={() => {
+          console.log('click');
+        }}
+      >
+        about
+      </button>
+    );
+  }
+}
+
+class Shop extends React.Component {
+  render() {
+    return (
+      <button
+        className='square'
+        onClick={() => {
+          console.log('click');
+        }}
+      >
+        shop
+      </button>
+    );
+  }
 }
 
 export default App;
