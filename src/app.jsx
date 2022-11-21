@@ -52,7 +52,7 @@ function App() {
           <span className='text-reset'>Author Name(s)</span>
           <a
             className='text-reset'
-            href='https://github.com/webprogramming260/simon-db'
+            href='https://github.com/webprogramming260/simon-react'
           >
             Source
           </a>
