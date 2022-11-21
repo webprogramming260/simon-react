@@ -1,4 +1,5 @@
 import React from 'react';
+import "./play.css"
 
 export class Play extends React.Component {
   render() {
@@ -9,22 +10,22 @@ export class Play extends React.Component {
             <button
               id='green'
               className='game-button button-top-left'
-              onclick='game.pressButton(this)'
+              onClick='game.pressButton(this)'
             ></button>
             <button
               id='red'
               className='game-button button-top-right'
-              onclick='game.pressButton(this)'
+              onClick='game.pressButton(this)'
             ></button>
             <button
               id='yellow'
               className='game-button button-bottom-left'
-              onclick='game.pressButton(this)'
+              onClick='game.pressButton(this)'
             ></button>
             <button
               id='blue'
               className='game-button button-bottom-right'
-              onclick='game.pressButton(this)'
+              onClick='game.pressButton(this)'
             ></button>
             <div className='controls center'>
               <div className='game-name'>
@@ -33,7 +34,7 @@ export class Play extends React.Component {
               <div id='score' className='score center'>
                 --
               </div>
-              <button className='btn btn-primary' onclick='game.reset()'>
+              <button className='btn btn-primary' onClick='game.reset()'>
                 Reset
               </button>
             </div>
