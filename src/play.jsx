@@ -19,11 +19,9 @@ export class Game extends React.Component {
   }
 
   buttonPressed(button) {
-    console.log('play button pressed', button);
     // if (this.allowPlayer) {
     //   this.allowPlayer = false;
     //   await this.buttons.get(button.id).press();
-
     //   if (this.sequence[this.playerPlaybackPos].el.id === button.id) {
     //     this.playerPlaybackPos++;
     //     if (this.playerPlaybackPos === this.sequence.length) {
@@ -48,7 +46,7 @@ export class Game extends React.Component {
       sequence: [],
     });
     //  this.updateScore('--');
-    await this.buttonDance(1);
+    await this.buttonDance(2);
     // this.addNote();
     // await this.playSequence(1000);
     // this.allowPlayer = true;
@@ -74,7 +72,16 @@ export class Game extends React.Component {
   // }
 
   async buttonDance(laps = 5) {
-    console.log(this.props.children);
+    const btns = document.querySelectorAll('.game-btn');
+
+    for (let lap = 0; lap < laps; lap++) {
+      for (let i = 0; i < btns.length; ++i) {
+        await delay(180);
+        btns[i].click();
+      }
+    }
+
+    //    console.log(this.props.children);
     // for (let step = 0; step < laps; step++) {
     //   for (const btn of this.buttons.values()) {
     //     await btn.press(100, false);
@@ -194,6 +201,7 @@ export class Button extends React.Component {
 
   render() {
     const className = [
+      'game-btn',
       'btn-' + this.props.id,
       'light-' + this.state.light,
     ].join(' ');
