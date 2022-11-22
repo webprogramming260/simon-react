@@ -41,7 +41,7 @@ In order to wire this up correctly two settings have to be changed. First create
 PORT=3001
 ```
 
-Next, modify the `package.json` file to include the field `"proxy": "http://localhost:3000"`. This tells the React debugger that if a request is made for a URL that it doesn't know about it attempts to find it on port 3000, where our service is listening.
+Next, modify the `package.json` file to include the field `"proxy": "http://localhost:3000"`. This tells the React debugger that if a request is made for a URL that it doesn't know about, it attempts to resolve the URL on port 3000, where our service is listening.
 
 ## Configure the ports for development
 
