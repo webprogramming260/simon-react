@@ -196,38 +196,43 @@ function login() {
 
 In order to convert the code to a React component we make the following changes.
 
-- The header (along with navigation) and footer are moved into the app component and so we can drop that duplicated code out of the component HTML.
-- The login function becomes a function on the Login component.
+- The header (along with navigation) and footer are moved into the app component so we can drop that duplicated code out of the component.
+- The Login component uses the React function style component.
+- The login function becomes an inner function on the Login component.
+- The React `useNavigate` function is used to interact with the React router.
 - The `class` attribute is renamed to `className` so that it doesn't conflict with the JavaScript keyword `class`.
-- `onclick` is renamed to the expected React `onClick` attribute. The value is changed to a function call on the component (`{this.login()}`).
+- `onclick` is renamed to the expected React `onClick` attribute. The value is changed to a function call on the component (`{login()}`).
 
 **login.jsx**
 
 ```jsx
-export class Login extends React.Component {
-  login() {
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export const Login = () => {
+  let navigate = useNavigate();
+
+  function login() {
     const nameEl = document.querySelector('#name');
     localStorage.setItem('userName', nameEl.value);
-    window.location.href = '/play';
+    navigate('/play');
   }
 
-  render() {
-    return (
-      <main className='container-fluid bg-secondary text-center'>
+  return (
+    <main className='container-fluid bg-secondary text-center'>
+      <div>
+        <h1>Welcome</h1>
+        <p>Login to play</p>
         <div>
-          <h1>Welcome</h1>
-          <p>Login to play</p>
-          <div>
-            <input type='text' id='name' placeholder='Your name here' />
-            <button className='btn btn-primary' onClick={() => this.login()'>
-              Login
-            </button>
-          </div>
+          <input type='text' id='name' placeholder='Your name here' />
+          <button className='btn btn-primary' onClick={() => login()}>
+            Login
+          </button>
         </div>
-      </main>
-    );
-  }
-}
+      </div>
+    </main>
+  );
+};
 ```
 
 The Login component doesn't have any specific styling and so we don't create and import a CSS file. If it did we would pull the specific styling out of `app.css` and put it in a CSS file for the component. That file would then be imported into the component JSX file just like we did for `app.jsx`.
@@ -287,7 +292,7 @@ function NotFound() {
 
 ## Test as you go
 
-That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` builds and then make sure it runs (using `npm run start`) without error and appears as you expect. Then commit the project to GitHub. Then make a small change, make sure it works, and commit at each successful milestone. That way you can see where things get broken and revert to a previous commit if things get out of hand.
+That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` builds and then make sure it runs (using `npm run start`) without error. Make sure you understand everything it is doing before it gets more complex. Then commit the project to GitHub. Then make a small change, make sure it works, and commit at each successful milestone. That way you can see where things get broken and revert to a previous commit if things get out of hand.
 
 # ☑ Assignment
 
