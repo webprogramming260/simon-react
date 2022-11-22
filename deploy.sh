@@ -1,3 +1,5 @@
+#!/bin/bash
+
 while getopts k:h:s:p: flag
 do
     case "${flag}" in
@@ -16,27 +18,32 @@ fi
 
 printf "\n-------------------------------\nDeploying $service to $hostname on internal port $port with $key\n-------------------------------\n"
 
-# Build the distribution package
+# Step 1
+printf "\n----> Build the distribution package\n"
+npm run build
 rm -rf dist
 mkdir dist
-cp -r application dist
-cp *.js dist
-cp package* dist
+cp -rf build dist/application
+cp service/*.js dist
+cp service/package* dist
 
-# Clear out the previous distribution on the target.
+# Step 2
+printf "\n----> Clearing out previous distribution on the target\n"
 ssh -i $key ubuntu@$hostname << ENDSSH
 rm -rf services/${service}
 mkdir -p services/${service}
 ENDSSH
 
-# Copy the distribution package to the target.
+# Step 3
+printf "\n----> Copy the distribution package to the target\n"
 scp -r -i $key dist/* ubuntu@$hostname:services/$service
 
-# Deploy the service on the target. A new service is registered if it doesn't exist.
+# Step 4
+printf "\n----> Deploy the service on the target\n"
 ssh -i $key ubuntu@$hostname << ENDSSH
 cd services/${service}
 npm install
-if cat /etc/caddy/Caddyfile | grep -q ${service}; then
+if cat /etc/caddy/Caddyfile | grep -q ${hostname}; then
   printf "\n-------------------------------\nUpdating existing service\n-------------------------------\n"
   pm2 restart ${service}
 elif cat /etc/caddy/Caddyfile | grep -q ${port}; then
@@ -47,11 +54,11 @@ else
   pm2 start index.js --name ${service}
   pm2 save
   cd ~
-  sudo sed -i '/file_server/a \\\n\treverse_proxy /${service}* localhost:${port}' /etc/caddy/Caddyfile
+  sudo sh -c 'printf "\n\n${hostname} {\n\treverse_proxy * localhost:${port}\n}\n" >> Caddyfile'
   sudo service caddy restart
 fi
-
 ENDSSH
 
-# Delete the local copy of the package.
+# Step 5
+printf "\n----> Removing local copy of the distribution package\n"
 rm -rf dist
