@@ -282,13 +282,13 @@ function NotFound() {
 
 ## Test as you go
 
-That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` build and then make sure it runs (using `npm run start`) without error and appears as you expect. Then commit the project to GitHub. Then make small changes, make sure they work, and commit at each successful milestone. That way you can see where things get broken and can revert to a previous commit if things get out of hand.
+That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` builds and then make sure it runs (using `npm run start`) without error and appears as you expect. Then commit the project to GitHub. Then make a small change, make sure it works, and commit at each successful milestone. That way you can see where things get broken and revert to a previous commit if things get out of hand.
 
 # ☑ Assignment
 
-- Convert your `simon` application, or the class example [simon-db](https://github.com/webprogramming260/simon-db) application, to use React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-db) if you need help.
-- Update the simon-db repository README.md to record and reflect on what you are learning.
-- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script.
+- Convert your `simon` application, or the class example [simon-db](https://github.com/webprogramming260/simon-db) application, to use React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
+- Update your simon repository README.md to record and reflect on what you are learning.
+- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script from the [class example]().
 - Make sure your project is visible from your production enviornment.
 - Submit the URL to your project on the production environment (e.g. https://yourhostname/simon) for grading using the Canvas assignment page.
 
