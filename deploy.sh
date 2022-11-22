@@ -16,6 +16,8 @@ if [[ -z "$key" || -z "$hostname" || -z "$service" || -z "$port" ]]; then
     exit 1
 fi
 
+hostname=$service.$hostname
+
 printf "\n-------------------------------\nDeploying $service to $hostname on internal port $port with $key\n-------------------------------\n"
 
 # Step 1
@@ -51,7 +53,7 @@ elif cat /etc/caddy/Caddyfile | grep -q ${port}; then
   rm -rf ~/services/${service}
 else
   printf "\n-------------------------------\nInstalling new service\n-------------------------------\n"
-  pm2 start index.js --name ${service}
+  pm2 start index.js --name ${service}  -- ${port}
   pm2 save
   cd ~
   sudo sh -c 'printf "\n\n${hostname} {\n\treverse_proxy * localhost:${port}\n}\n" >> Caddyfile'
