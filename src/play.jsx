@@ -101,7 +101,7 @@ export class Game extends React.Component {
     const newScore = { name: userName, score: score, date: date };
 
     try {
-      const response = await fetch('/simon-server/api/score', {
+      const response = await fetch('/api/score', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(newScore),

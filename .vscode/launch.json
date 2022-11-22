@@ -5,9 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Service",
+      "program": "${workspaceFolder}/service/index.js",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
       "type": "chrome",
       "request": "launch",
-      "name": "Localhost",
+      "name": "Application",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"
     }

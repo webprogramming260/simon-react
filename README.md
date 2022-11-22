@@ -16,6 +16,8 @@ The following section discusses the general steps necessary to convert the Simon
 1. Rename `js` JSX files have `jsx` extension (strange that it wasn't already jsx)
 1. Replace the `favicon.ico` with the Simon version
 1. Update `manifest.json` to represent Simon
+1. Copy over the service code
+1. Set up the application to use port 3001 and look for the service on port 3000 when in development
 1. Move application header and footer into the `app.jsx`
 1. Create the component files `login.jsx`, `play.jsx`, `scores.jsx`, and `about.jsx`.
 1. Move css into components
@@ -24,6 +26,24 @@ The following section discusses the general steps necessary to convert the Simon
 1. Create the router in `app.jsx`
 
 The major steps in this process are detailed below.
+
+## Copy over the service code
+
+The service code is needed in order to support the Simon application. Create a directory named `service` at the root of the project. Copy over the service `index.js` from the previous project and put it in the service directory. The service can now be launched from that directory using `node index.js`.
+
+## Configure the application for development
+
+The Simon service is still used to serve the application when it is running in your production environment. That means that in production both the application and the service are accessible on port 3000. However, when when the application is running in your development environment the applicationn needs to run on a different port because the React debugging HTTP server runs independently from the service's HTTP server.
+
+In order to wire this up correctly two settings have to be changed. First create a file named `.env.local` in the root of the project. Insert the following text into the file.
+
+```
+PORT=3001
+```
+
+Next, modify the `package.json` file to include the field `"proxy": "http://localhost:3000"`. This tells the React debugger that if a request is made for a URL that it doesn't know about it attempts to find it on port 3000, where our service is listening.
+
+## Configure the ports for development
 
 ## Converting the app
 
