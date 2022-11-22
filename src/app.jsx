@@ -16,7 +16,7 @@ function App() {
           </div>
           <menu className='navbar-nav'>
             <li className='nav-item'>
-              <NavLink className='nav-link active' to='/'>
+              <NavLink className='nav-link' to='/'>
                 Login
               </NavLink>
             </li>
@@ -69,10 +69,5 @@ function NotFound() {
     </main>
   );
 }
-
-
-
-
-
 
 export default App;
