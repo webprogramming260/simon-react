@@ -298,7 +298,7 @@ That was a lot of changes and it is easy to make a mistake during the process. I
 
 - Convert your `simon` application, or the class example [simon-db](https://github.com/webprogramming260/simon-db) application, to use React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
 - Update your simon repository README.md to record and reflect on what you are learning.
-- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script from the [class example](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
+- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script from the [class example](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
 - Make sure your project is visible from your production enviornment.
 - Submit the URL to your project on the production environment (e.g. https://yourhostname/simon) for grading using the Canvas assignment page.
 
