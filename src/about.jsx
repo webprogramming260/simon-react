@@ -32,6 +32,12 @@ export class About extends React.Component {
       .catch();
   }
 
+  rat() {
+    console.log('rat called', this);
+
+    console.log(this.render());
+  }
+
   render() {
     let imgEl = '';
 
@@ -62,6 +68,7 @@ export class About extends React.Component {
           <div className='quote-box bg-light text-dark'>
             <p className='quote'>{this.state.quote}</p>
             <p className='author'>{this.state.quoteAuthor}</p>
+            <button onClick={() => this.rat()}>clickhere</button>
           </div>
         </div>
       </main>
