@@ -32,12 +32,6 @@ export class About extends React.Component {
       .catch();
   }
 
-  rat() {
-    console.log('rat called', this);
-
-    console.log(this.render());
-  }
-
   render() {
     let imgEl = '';
 
@@ -53,7 +47,7 @@ export class About extends React.Component {
           </div>
 
           <p>
-            Simon is a repetative memory game where you follow the demonstrated
+            Simon is a repetitive memory game where you follow the demonstrated
             color sequence until you make a mistake. The longer the sequence you
             repeat, the greater your score.
           </p>
@@ -68,7 +62,6 @@ export class About extends React.Component {
           <div className='quote-box bg-light text-dark'>
             <p className='quote'>{this.state.quote}</p>
             <p className='author'>{this.state.quoteAuthor}</p>
-            <button onClick={() => this.rat()}>clickhere</button>
           </div>
         </div>
       </main>
