@@ -301,7 +301,7 @@ That was a lot of changes and it is easy to make a mistake during the process. I
 - Periodically deploy to your production environment using a copy of the `deploy.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). Take some time to understand how it works.
 
   ```sh
-  ./deploy.sh -k <yourpemkey> -h <yourdomain> -s simon-react -p 3002
+  ./deploy.sh -k <yourpemkey> -h <yourdomain> -s simon-react -p 3003
   ```
 
   ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
