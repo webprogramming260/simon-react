@@ -1,6 +1,6 @@
 # simon-react
 
-This demonstrates using a web framework. When your applications start getting more and more complex it becomes necessary to use a web framework that helps with tasks such as builiding modular components, providing reactive UI elements, supporting sessions, lazy loading, and reducing (minifying) the size of your application.
+This demonstrates using a web framework. When your applications start getting more and more complex it becomes necessary to use a web framework that helps with tasks such as building modular components, providing reactive UI elements, supporting sessions, lazy loading, and reducing (minifying) the size of your application.
 
 Some frameworks take the additional step of abstracting parts of HTML and CSS to make authoring components easier. When this happens the project must be pre-processed in order to turn it into HTML and CSS that the browser can execute. This process requires a tool chain that executes to produce a browser ready bundle.
 
@@ -11,8 +11,8 @@ For this project we will use [React](https://reactjs.org/) framework and the ass
 The following section discusses the general steps necessary to convert the Simon application from a simple HTML/CSS/JavaScript application to a React application. You will need to take similar steps for your start up project and so it is important to understand what is happening at each step conversion process.
 
 1. Run `npx create-react-app simon-react`
-1. Uninstall the unnecessary modules that create-react-app add (eg stats, test)
-1. Delete the unecessary create-react-app files (eg images)
+1. Uninstall the unnecessary node modules that create-react-app adds (e.g. stats, test)
+1. Delete the unnecessary create-react-app files (e.g. images)
 1. Rename `js` JSX files have `jsx` extension (strange that it wasn't already jsx)
 1. Replace the `favicon.ico` with the Simon version
 1. Update `manifest.json` to represent Simon
@@ -30,7 +30,7 @@ The major steps in this process are detailed below.
 
 ## Copy over the service code
 
-The service code is needed in order to support the Simon application. Create a directory named `service` at the root of the project. Copy over the service code (eg `index.js`, `database.js`, ...) from the previous `simon-db` project and put it in the service directory.
+The service code is needed in order to support the Simon application. Create a directory named `service` at the root of the project. Copy over the service code (e.g. `index.js`, `database.js`, ...) from the previous `simon-db` project and put it in the service directory.
 
 In the `service` directory run `npm init` in order to configure it as a node package. Then install the package dependencies `npm install express` and `npm install mongodb`.
 
@@ -38,7 +38,7 @@ The service can now be launched from the `service` directory using `node index.j
 
 ## Configure the application for development
 
-The Simon service is still used to serve the application when it is running in your production environment. That means that in production both the application and the service are accessible on port 3000. However, when when the application is running in your development environment the applicationn needs to run on a different port because the React debugging HTTP server runs independently from the service's HTTP server.
+The Simon service is still used to serve the application when it is running in your production environment. That means that in production both the application and the service are accessible on port 3000. However, when when the application is running in your development environment the application needs to run on a different port because the React debugging HTTP server runs independently from the service's HTTP server.
 
 In order to wire this up correctly two settings have to be changed. First create a file named `.env.local` in the root of the project. Insert the following text into the file.
 
@@ -104,7 +104,7 @@ function App() {
 }
 ```
 
-In order for the styling to show up wemove the `main.css` cotnent into a file named `app.css` and import the CSS file into the app.
+In order for the styling to show up, remove the `main.css` content into a file named `app.css` and import the CSS file into the app.
 
 ```jsx
 import `./app.css`
@@ -296,11 +296,14 @@ That was a lot of changes and it is easy to make a mistake during the process. I
 
 # ☑ Assignment
 
-- Convert your `simon` application, or the class example [simon-db](https://github.com/webprogramming260/simon-db) application, to use React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
+- Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
 - Update your simon repository README.md to record and reflect on what you are learning.
-- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script from the [class example](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
-- Make sure your project is visible from your production enviornment.
-- Submit the URL to your project on the production environment (e.g. https://yourhostname/simon) for grading using the Canvas assignment page.
+- When you have completed your version. Do a final push of your code and deploy your final version to your production environment using the `deploy.sh` script from the [class example](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh).
+
+  ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
+
+- Make sure your project is visible from your production environment (e.g. https://simon-react.yourhostname).
+- Submit the URL to your project on the production environment for grading using the Canvas assignment page.
 
 ## Grading Rubric
 
