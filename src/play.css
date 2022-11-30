@@ -11,8 +11,8 @@
   position: absolute;
   min-width: 350px;
   min-height: 350px;
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: min(80vmin, 1000px);
+  max-height: min(80vmin, 1000px);
 }
 
 .button-container {
@@ -97,13 +97,4 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
-}
-
-@media (max-height: 600px) {
-  .game {
-    max-width: 90vh;
-    max-height: 90vh;
-    min-width: 90vh;
-    min-height: 90vh;
-  }
 }
