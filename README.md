@@ -297,7 +297,7 @@ That was a lot of changes and it is easy to make a mistake during the process. I
 # ☑ Assignment
 
 - Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
-- Update your simon repository README.md to record and reflect on what you are learning.
+- Update your start up repository README.md to record and reflect on what you are learning.
 - Periodically deploy to your production environment using a copy of the `deploy.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). Take some time to understand how it works.
 
   ```sh
@@ -317,4 +317,4 @@ That was a lot of changes and it is easy to make a mistake during the process. I
 - 30% - Successfully converted the components
 - 20% - Successfully implemented the router
 - 10% - At least four Git commits for the project (Initial, milestone, ..., milestone, final)
-- 10% - Notes in your Simon repository README.md about what you have learned
+- 10% - Notes in your start up repository README.md about what you have learned
