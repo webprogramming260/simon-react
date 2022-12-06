@@ -8,7 +8,7 @@ const port = process.argv.length > 2 ? process.argv[2] : 3000;
 // JSON body parsing using built-in middleware
 app.use(express.json());
 
-// Server up the applications static content
+// Server up the application's static content
 app.use(express.static('application'));
 
 // Router for service endpoints
@@ -28,9 +28,9 @@ apiRouter.post('/score', async (req, res) => {
   res.send(scores);
 });
 
-// Redirect back to the home page if the path is unknown
+// Return the application's default page if the path is unknown
 app.use((_req, res) => {
-  res.redirect(`/`);
+  res.sendFile('index.html', { root: 'application' });
 });
 
 app.listen(port, () => {

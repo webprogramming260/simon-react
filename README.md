@@ -48,8 +48,6 @@ PORT=3001
 
 Next, modify the `package.json` file to include the field `"proxy": "http://localhost:3000"`. This tells the React debugger that if a request is made for a URL that it doesn't know about, it attempts to resolve the URL on port 3000, where our service is listening.
 
-## Configure the ports for development
-
 ## Converting the app
 
 One of the big advantages of React is the ability to represent your web application as a modular application instead of a set of interconnected HTML pages. The `app.jsx` file represents the application component that is the parent of all our other components. To make `app.jsx` the Simon application component we first move the header and footer into the render function for the app. Since this is now JSX instead of HTML we rename the `class` attribute to be `className` so that it doesn't conflict with the JavaScript keyword.
@@ -244,7 +242,7 @@ With `app.jsx` containing the header and footer and all the component code creat
 This is done by inserting the `react-router-dom` package into the project. First, install the package with `npm install react-router-dom` and then include the router component in the `index.jsx` and `app.jsx` files.
 
 **index.jsx**
-The router controls the whole application and so we put the `BrowserRouter` component elment around our `App` element.
+The router controls the whole application and so we put the `BrowserRouter` component element around our `App` element.
 
 ```
 const root = ReactDOM.createRoot(document.getElementById('root'));

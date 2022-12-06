@@ -16,22 +16,22 @@ function App() {
           </div>
           <menu className='navbar-nav'>
             <li className='nav-item'>
-              <NavLink className='nav-link' to='/'>
+              <NavLink className='nav-link' to=''>
                 Login
               </NavLink>
             </li>
             <li className='nav-item'>
-              <NavLink className='nav-link' to='/play'>
+              <NavLink className='nav-link' to='play'>
                 Play
               </NavLink>
             </li>
             <li className='nav-item'>
-              <NavLink className='nav-link' to='/scores'>
+              <NavLink className='nav-link' to='scores'>
                 Scores
               </NavLink>
             </li>
             <li className='nav-item'>
-              <NavLink className='nav-link' to='/about'>
+              <NavLink className='nav-link' to='about'>
                 About
               </NavLink>
             </li>
