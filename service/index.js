@@ -23,7 +23,7 @@ apiRouter.get('/scores', async (_req, res) => {
 
 // SubmitScore
 apiRouter.post('/score', async (req, res) => {
-  DB.addScore(req.body);
+  await DB.addScore(req.body);
   const scores = await DB.getHighScores();
   res.send(scores);
 });
