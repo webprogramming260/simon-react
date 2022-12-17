@@ -25,6 +25,7 @@ The following section discusses the general steps necessary to convert the Simon
 1. Move HTML into components
 1. Move JavaScript into components
 1. Create the router in `app.jsx`
+1. Replace the code in you Simon repository with the new React version
 
 The major steps in this process are detailed below.
 
@@ -50,7 +51,7 @@ Next, modify the `package.json` file to include the field `"proxy": "http://loca
 
 ## Converting the app
 
-One of the big advantages of React is the ability to represent your web application as a modular application instead of a set of interconnected HTML pages. The `app.jsx` file represents the application component that is the parent of all our other components. To make `app.jsx` the Simon application component we first move the header and footer into the render function for the app. Since this is now JSX instead of HTML we rename the `class` attribute to be `className` so that it doesn't conflict with the JavaScript keyword.
+One of the big advantages of React is the ability to represent your web application as a modular application instead of a set of interconnected HTML pages. The `app.jsx` file represents the application component that is the parent of all our other components. To make `app.jsx` the Simon application component we first move the header and footer into the render function for the app. Since this is now JSX instead of HTML we rename the `class` attribute to be `className` so that it doesn't conflict with the JavaScript `class` keyword.
 
 ```jsx
 function App() {
@@ -102,7 +103,7 @@ function App() {
 }
 ```
 
-In order for the styling to show up, remove the `main.css` content into a file named `app.css` and import the CSS file into the app.
+In order for the styling to show up, move the `main.css` content into a file named `app.css` and import the CSS file into the app.jsx file.
 
 ```jsx
 import `./app.css`
@@ -194,12 +195,12 @@ function login() {
 
 In order to convert the code to a React component we make the following changes.
 
-- The header (along with navigation) and footer are moved into the app component so we can drop that duplicated code out of the component.
-- The Login component uses the React function style component.
+- Since we are building a single page application, the header (along with navigation) and footer are are moved into the app component. We can then drop that code out of all the component.
+- Implement the Login component using a React function style component.
 - The login function becomes an inner function on the Login component.
-- The React `useNavigate` function is used to interact with the React router.
+- The React `useNavigate` function is used to interact with the React router. We use this to navigate to the play component when the login button is pressed.
 - The `class` attribute is renamed to `className` so that it doesn't conflict with the JavaScript keyword `class`.
-- `onclick` is renamed to the expected React `onClick` attribute. The value is changed to a function call on the component (`{login()}`).
+- `onclick` is renamed to the expected React `onClick` attribute. The value is changed to a function call on the component (`{() => login()}`).
 
 **login.jsx**
 
@@ -233,7 +234,7 @@ export const Login = () => {
 };
 ```
 
-The Login component doesn't have any specific styling and so we don't create and import a CSS file. If it did we would pull the specific styling out of `app.css` and put it in a CSS file for the component. That file would then be imported into the component JSX file just like we did for `app.jsx`.
+The Login component doesn't have any specific styling and so we do not create and import a CSS file. If it did, we would pull the specific styling out of `app.css` and put it in a CSS file for the component. That file would then be imported into the component JSX file just like we did for `app.jsx`.
 
 ## Setting up the router
 
