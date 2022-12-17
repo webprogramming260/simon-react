@@ -6,18 +6,18 @@ Some frameworks take the additional step of abstracting parts of HTML and CSS to
 
 For this project we will use [React](https://reactjs.org/) framework and the associated `create-react-app` package to convert Simon into a React based application.
 
-# Converting to Simon React
+# Steps to convert Simon to React
 
-The following section discusses the general steps necessary to convert the Simon application from a simple HTML/CSS/JavaScript application to a React application. You will need to take similar steps for your start up project and so it is important to understand what is happening at each step conversion process.
+The following section discusses the general steps necessary to convert the Simon application from a simple HTML/CSS/JavaScript application to a React application. You will need to take similar steps for your start up project and so it is important to understand what is happening at each step conversion process. Here are the major steps involved in the conversion. Many of these steps are detailed below.
 
-1. Run `npx create-react-app simon-react`
+1. Run `npx create-react-app simon-react`. This will create a new directory that we will use to do our conversion. When we have it all working right we will move the result into our Simon repository directory.
 1. Uninstall the unnecessary node modules that create-react-app adds (e.g. stats, test)
 1. Delete the unnecessary create-react-app files (e.g. images)
 1. Rename `js` JSX files have `jsx` extension
 1. Replace the `favicon.ico` with the Simon version
 1. Update `manifest.json` to represent Simon
-1. Copy over the service code
-1. Set up the server node configuration
+1. Copy over the service code from the Simon repository into a `service` directory
+1. Initialize node in the service directory by running `npm init` and `npm install express mongodb`
 1. Set up the application to use port 3001 and look for the service on port 3000 when in development
 1. Move application header and footer into the `app.jsx`
 1. Create the component files `login.jsx`, `play.jsx`, `scores.jsx`, and `about.jsx`.
@@ -26,8 +26,6 @@ The following section discusses the general steps necessary to convert the Simon
 1. Move JavaScript into components
 1. Create the router in `app.jsx`
 1. Replace the code in you Simon repository with the new React version
-
-The major steps in this process are detailed below.
 
 ## Copy over the service code
 
@@ -291,23 +289,43 @@ function NotFound() {
 
 ## Test as you go
 
-That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` builds and then make sure it runs (using `npm run start`) without error. Make sure you understand everything it is doing before it gets more complex. Then commit the project to GitHub. Then make a small change, make sure it works, and commit at each successful milestone. That way you can see where things get broken and revert to a previous commit if things get out of hand.
+That was a lot of changes and it is easy to make a mistake during the process. It is easier if you start with the working app that `create-react-app` builds and then make sure it runs (using `npm run start`) without error. Make sure you understand everything it is doing before it gets more complex. Then make a small change, and test that it works. That way you can see where things get broken before it gets out of hand.
 
-# ☑ Assignment
+## Study this code
 
-- Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) if you need help.
-- Update your start up repository README.md to record and reflect on what you are learning.
-- Periodically deploy to your production environment using a copy of the `deploy.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). Take some time to understand how it works.
+Get familiar with what the example code teaches.
+
+- Clone the repository to your development environment.
+  ```sh
+  git clone https://github.com/webprogramming260/simon-react.git
+  ```
+- Review the code and get comfortable with everything it represents.
+- View the code in your browser by hosting it from a VS Code debug session.
+- Make modifications to the code as desired. Experiment and see what happens.
+
+## Make your own version
+
+- Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) to guide your work. Remember that you do not need to recreate an original work. Just focus on learning the concepts that the example project provides. However, you will learn more if you type everything out, and not just copy and paste the code.
+- Set the footer link to point to your code repository. (e.g. https://github.com/yourname/simon)
+- Periodically commit and push your code to your repository as you hit different milestones. (4 commits are required for full credit.)
+- Deploy to your production environment using a copy of the `deploy.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). Take some time to understand how it works.
 
   ```sh
-  ./deploy.sh -k <yourpemkey> -h <yourdomain> -s simon-react -p 3003
+  ./deploy.sh -k <yourpemkey> -h <yourdomain> -s simon -p 3000
+  ```
+
+  For example,
+
+  ```sh
+  ./deploy.sh -k ~/keys/production.pem -h yourdomain.click -s simon -p 3000
   ```
 
   ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
 
-- When you have completed your version. Do a final push of your code and deploy your final version to your production environment.
-- Make sure your project is visible from your production environment (e.g. https://simon-react.yourhostname).
-- Submit the URL to your project on the production environment for grading using the Canvas assignment page.
+- Update your `simon` repository README.md to record and reflect on what you learned.
+- When you have completed your version. Do a final push of your code and deploy to your production environment using the `deploy.sh` script.
+- Make sure your project is visible from your production environment (e.g. https://simon.yourdomain.click).
+- Submit the URL to your production environment for grading using the Canvas assignment page.
 
 ## Grading Rubric
 
