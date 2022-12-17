@@ -13,7 +13,7 @@ The following section discusses the general steps necessary to convert the Simon
 1. Run `npx create-react-app simon-react`
 1. Uninstall the unnecessary node modules that create-react-app adds (e.g. stats, test)
 1. Delete the unnecessary create-react-app files (e.g. images)
-1. Rename `js` JSX files have `jsx` extension (strange that it wasn't already jsx)
+1. Rename `js` JSX files have `jsx` extension
 1. Replace the `favicon.ico` with the Simon version
 1. Update `manifest.json` to represent Simon
 1. Copy over the service code
