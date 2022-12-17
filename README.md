@@ -308,22 +308,22 @@ Get familiar with what the example code teaches.
 - Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) to guide your work. Remember that you do not need to recreate an original work. Just focus on learning the concepts that the example project provides. However, you will learn more if you type everything out, and not just copy and paste the code.
 - Set the footer link to point to your code repository. (e.g. https://github.com/yourname/simon)
 - Periodically commit and push your code to your repository as you hit different milestones. (4 commits are required for full credit.)
-- Deploy to your production environment using a copy of the `deploy.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deploy.sh). Take some time to understand how it works.
+- Deploy to your production environment using a copy of the `deployReact.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deployReact.sh). Take some time to understand how it works.
 
   ```sh
-  ./deploy.sh -k <yourpemkey> -h <yourdomain> -s simon -p 3000
+  ./deployReact.sh -k <yourpemkey> -h <yourdomain> -s simon -p 3000
   ```
 
   For example,
 
   ```sh
-  ./deploy.sh -k ~/keys/production.pem -h yourdomain.click -s simon -p 3000
+  ./deployReact.sh -k ~/keys/production.pem -h yourdomain.click -s simon -p 3000
   ```
 
   ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
 
 - Update your `simon` repository README.md to record and reflect on what you learned.
-- When you have completed your version. Do a final push of your code and deploy to your production environment using the `deploy.sh` script.
+- When you have completed your version. Do a final push of your code and deploy to your production environment using the `deployReact.sh` script.
 - Make sure your project is visible from your production environment (e.g. https://simon.yourdomain.click).
 - Submit the URL to your production environment for grading using the Canvas assignment page.
 

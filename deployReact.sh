@@ -12,13 +12,13 @@ done
 
 if [[ -z "$key" || -z "$hostname" || -z "$service" || -z "$port" ]]; then
     printf "\nMissing required parameter.\n"
-    printf "  syntax: deploy.sh -k <pem key file> -h <hostname> -s <service> -p <port>\n\n"
+    printf "  syntax: deployFiles.sh -k <pem key file> -h <hostname> -s <service> -p <port>\n\n"
     exit 1
 fi
 
 hostname=$service.$hostname
 
-printf "\n-------------------------------\nDeploying $service to $hostname on internal port $port with $key\n-------------------------------\n"
+printf "\n-------------------------------\nDeploying React bundle to $service to $hostname on internal port $port with $key\n-------------------------------\n"
 
 # Step 1
 printf "\n----> Build the distribution package\n"
