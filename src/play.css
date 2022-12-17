@@ -2,6 +2,16 @@
   color: rgb(246, 239, 158);
 }
 
+.players {
+  flex: 1;
+  width: 100%;
+  padding: 0.5em;
+}
+
+.player-name {
+  color: rgb(118, 190, 210);
+}
+
 .game {
   background: rgb(0, 0, 0);
   border-radius: 50%;

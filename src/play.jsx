@@ -20,14 +20,6 @@ export class Game extends React.Component {
     this.#sequence = [];
     this.#playerPlaybackPos = 0;
     this.#mistakeSound = new Audio(`/error.mp3`);
-
-    const sounds = ['sound1.mp3', 'sound2.mp3', 'sound3.mp3', 'sound4.mp3'];
-    document.querySelectorAll('.game-button').forEach((el, i) => {
-      if (i < sounds.length) {
-        this.#buttons.set(el.id, new Button(sounds[i], el));
-        el.style.filter = 'brightness(50%)';
-      }
-    });
   }
 
   async pressButton(buttonId) {
@@ -72,6 +64,10 @@ export class Game extends React.Component {
     }
   }
 
+  #getPlayerName() {
+    return localStorage.getItem('userName') ?? 'Mystery player';
+  }
+
   #addNote() {
     const btn = this.#getRandomButton();
     this.#sequence.push(btn);
@@ -96,7 +92,7 @@ export class Game extends React.Component {
   }
 
   async #saveScore(score) {
-    const userName = localStorage.getItem('userName') ?? 'unknown';
+    const userName = this.#getPlayerName();
     const date = new Date().toLocaleDateString();
     const newScore = { name: userName, score: score, date: date };
 
@@ -145,14 +141,20 @@ export class Game extends React.Component {
 
   componentDidMount() {
     document.querySelectorAll('.game-button').forEach((el, i) => {
-      console.log(this.#buttons);
       this.#buttons.set(el.id, new Button(el));
     });
+
+    const playerNameEl = document.querySelector('.player-name');
+    playerNameEl.textContent = this.#getPlayerName();
   }
 
   render() {
     return (
       <main className='bg-secondary'>
+        <div className='players'>
+          Player:
+          <span className='player-name'></span>
+        </div>
         <div className='game'>
           <div className='button-container'>
             <button

@@ -11,7 +11,7 @@ export class Scores extends React.Component {
     fetch('/api/scores')
       .then((response) => response.json())
       .then((scores) => {
-        this.setState({ scores: JSON.parse(scores) });
+        this.setState({ scores: scores });
         // Save the scores in case we go offline in the future
         localStorage.setItem('scores', JSON.stringify(scores));
       })
