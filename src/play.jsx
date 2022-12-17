@@ -63,9 +63,9 @@ export class Game extends React.Component {
     this.#allowPlayer = true;
   }
 
-  async #playSequence(delayms = 0) {
-    if (delayms > 0) {
-      await delay(delayms);
+  async #playSequence(delayMs = 0) {
+    if (delayMs > 0) {
+      await delay(delayMs);
     }
     for (const btn of this.#sequence) {
       await btn.press();
@@ -91,8 +91,8 @@ export class Game extends React.Component {
   }
 
   #getRandomButton() {
-    let btns = Array.from(this.#buttons.values());
-    return btns[Math.floor(Math.random() * this.#buttons.size)];
+    let buttons = Array.from(this.#buttons.values());
+    return buttons[Math.floor(Math.random() * this.#buttons.size)];
   }
 
   async #saveScore(score) {
@@ -202,12 +202,12 @@ class Button {
     this.sound = new Audio(`/${el.id}.mp3`);
   }
 
-  async press(delayms = 500, playSound = true) {
+  async press(delayMs = 500, playSound = true) {
     this.el.classList.remove('light-on');
     if (playSound) {
       this.sound.play();
     }
-    await delay(delayms);
+    await delay(delayMs);
     this.el.classList.add('light-on');
     await delay(100);
   }
