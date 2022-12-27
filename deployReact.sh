@@ -56,7 +56,7 @@ else
   pm2 start index.js --name ${service}  -- ${port}
   pm2 save
   cd ~
-  sudo sh -c 'printf "\n\n${hostname} {\n\treverse_proxy * localhost:${port}\n}\n" >> Caddyfile'
+  sudo sh -c 'printf "\n\n${hostname} {\n\treverse_proxy * localhost:${port}\n\theader Cache-Control "none"\n}\n" >> Caddyfile'
   sudo service caddy restart
 fi
 ENDSSH
