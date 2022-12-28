@@ -311,13 +311,13 @@ Get familiar with what the example code teaches.
 - Deploy to your production environment using a copy of the `deployReact.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deployReact.sh). Take some time to understand how it works.
 
   ```sh
-  ./deployReact.sh -k <yourpemkey> -h <yourdomain> -s simon -p 3000
+  ./deployReact.sh -k <yourpemkey> -h <yourdomain> -s simon
   ```
 
   For example,
 
   ```sh
-  ./deployReact.sh -k ~/keys/production.pem -h yourdomain.click -s simon -p 3000
+  ./deployReact.sh -k ~/keys/production.pem -h yourdomain.click -s simon
   ```
 
   ⚠ **NOTE** - The deployment script for this project is different than pervious deployment scripts since it includes the bundling of your React application.
