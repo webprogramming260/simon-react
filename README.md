@@ -305,7 +305,7 @@ Get familiar with what the example code teaches.
 
 ## Make your own version
 
-- Convert your `simon` application to use React, or create an entirely new version of Simon using React. You can view the class example of [Simon React](https://simon-react.cs260.click) and the [source code](https://github.com/webprogramming260/simon-react) to guide your work. Remember that you do not need to create an original work. Just focus on learning the concepts that the example project provides. However, you will learn more if you type everything out, and not just copy and paste the code.
+- Convert your `simon` application to use React, or create an entirely new version of Simon using React with the [example implementation](https://github.com/webprogramming260/simon-react) as your guide. Here is the working demonstration [Simon React](https://simon-react.cs260.click) application. Remember that you do not need to create an original work. Just focus on learning the concepts that the example project provides. However, you will learn more if you type everything out, and not just copy and paste the code.
 - Set the footer link to point to your code repository. (e.g. https://github.com/yourname/simon)
 - Periodically commit and push your code to your repository as you hit different milestones. (4 commits are required for full credit.)
 - Deploy to your production environment using a copy of the `deployReact.sh` script found in the [example class project](https://github.com/webprogramming260/simon-react/blob/main/deployReact.sh). Take some time to understand how it works.
