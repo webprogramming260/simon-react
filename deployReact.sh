@@ -1,31 +1,28 @@
-#!/bin/bash
-
 while getopts k:h:s:p: flag
 do
     case "${flag}" in
         k) key=${OPTARG};;
         h) hostname=${OPTARG};;
         s) service=${OPTARG};;
-        p) port=${OPTARG};;
     esac
 done
 
-if [[ -z "$key" || -z "$hostname" || -z "$service" || -z "$port" ]]; then
+if [[ -z "$key" || -z "$hostname" || -z "$service" ]]; then
     printf "\nMissing required parameter.\n"
-    printf "  syntax: deployFiles.sh -k <pem key file> -h <hostname> -s <service> -p <port>\n\n"
+    printf "  syntax: deployService.sh -k <pem key file> -h <hostname> -s <service>\n\n"
     exit 1
 fi
 
-hostname=$service.$hostname
+hostname=$hostname
 
-printf "\n-------------------------------\nDeploying React bundle to $service to $hostname on internal port $port with $key\n-------------------------------\n"
+printf "\n----> Deploying React bundle $service to $hostname on internal port $port with $key\n"
 
 # Step 1
 printf "\n----> Build the distribution package\n"
 npm run build
 rm -rf dist
 mkdir dist
-cp -rf build dist/application
+cp -rf build dist/public
 cp service/*.js dist
 cp service/package* dist
 
@@ -45,20 +42,7 @@ printf "\n----> Deploy the service on the target\n"
 ssh -i $key ubuntu@$hostname << ENDSSH
 cd services/${service}
 npm install
-if cat /etc/caddy/Caddyfile | grep -q ${hostname}; then
-  printf "\n-------------------------------\nUpdating existing service\n-------------------------------\n"
-  pm2 restart ${service}
-elif cat /etc/caddy/Caddyfile | grep -q ${port}; then
-  printf "\n-------------------------------\n            Failure             \nExisting service already using port ${port}\n-------------------------------\n"
-  rm -rf ~/services/${service}
-else
-  printf "\n-------------------------------\nInstalling new service\n-------------------------------\n"
-  pm2 start index.js --name ${service}  -- ${port}
-  pm2 save
-  cd ~
-  sudo sh -c 'printf "\n\n${hostname} {\n\treverse_proxy * localhost:${port}\n\theader Cache-Control "none"\n}\n" >> Caddyfile'
-  sudo service caddy restart
-fi
+pm2 restart ${service}
 ENDSSH
 
 # Step 5
