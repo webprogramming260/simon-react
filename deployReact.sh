@@ -1,4 +1,4 @@
-while getopts k:h:s:p: flag
+while getopts k:h:s: flag
 do
     case "${flag}" in
         k) key=${OPTARG};;
@@ -13,9 +13,7 @@ if [[ -z "$key" || -z "$hostname" || -z "$service" ]]; then
     exit 1
 fi
 
-hostname=$hostname
-
-printf "\n----> Deploying React bundle $service to $hostname on internal port $port with $key\n"
+printf "\n----> Deploying React bundle $service to $hostname with $key\n"
 
 # Step 1
 printf "\n----> Build the distribution package\n"
