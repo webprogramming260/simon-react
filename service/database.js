@@ -11,10 +11,10 @@ if (!userName) {
 const uri = `mongodb+srv://${userName}:${password}@${hostname}`;
 
 const client = new MongoClient(uri);
-const collection = client.db('simon').collection('scores');
+const scoreCollection = client.db('simon').collection('score');
 
 function addScore(score) {
-  collection.insertOne(score);
+  scoreCollection.insertOne(score);
 }
 
 function getHighScores() {
@@ -23,7 +23,7 @@ function getHighScores() {
     sort: { score: -1 },
     limit: 10,
   };
-  const cursor = collection.find(query, options);
+  const cursor = scoreCollection.find(query, options);
   return cursor.toArray();
 }
 
