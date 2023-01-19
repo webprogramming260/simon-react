@@ -1,44 +1,23 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { bootstrap } from 'bootstrap/dist/js/bootstrap.bundle.min';
 import './login.css';
 
-export class Login extends React.Component {
-  navigate = useNavigate();
-  authenticated = false;
+function LoginControls(props) {
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState(props.userName);
+  const [password, setPassword] = useState();
 
-  constructor(props) {
-    super(props);
-
-    const userName = localStorage.getItem('userName');
-    if (userName) {
-      const nameEl = document.querySelector('#userName');
-      nameEl.value = userName;
-      this.getUser(nameEl.value).then((user) => {
-        this.authenticated = user?.authenticated;
-      });
-    }
-    if (this.authenticated) {
-      document.querySelector('#playerName').textContent = userName;
-      this.setDisplay('loginControls', 'none');
-      this.setDisplay('playControls', 'block');
-    } else {
-      this.setDisplay('loginControls', 'block');
-      this.setDisplay('playControls', 'none');
-    }
+  async function loginUser() {
+    loginOrCreate(`/api/auth/login`);
   }
 
-  async loginUser() {
-    this.loginOrCreate(`/api/auth/login`);
+  async function createUser() {
+    loginOrCreate(`/api/auth/create`);
   }
 
-  async createUser() {
-    this.loginOrCreate(`/api/auth/create`);
-  }
-
-  async loginOrCreate(endpoint) {
-    const userName = document.querySelector('#userName')?.value;
-    const password = document.querySelector('#userPassword')?.value;
+  async function loginOrCreate(endpoint) {
     const response = await fetch(endpoint, {
       method: 'post',
       body: JSON.stringify({ email: userName, password: password }),
@@ -49,7 +28,7 @@ export class Login extends React.Component {
     const body = await response.json();
     if (response?.status === 200) {
       localStorage.setItem('userName', userName);
-      window.location.href = 'play.html';
+      navigate('/play');
     } else {
       const modalEl = document.querySelector('#msgModal');
       modalEl.querySelector('.modal-body').textContent = `⚠ Error: ${body.msg}`;
@@ -58,17 +37,77 @@ export class Login extends React.Component {
     }
   }
 
-  play() {
-    this.navigate('/play');
-  }
+  return (
+    <div id='loginControls'>
+      <div className='input-group mb-3'>
+        <span className='input-group-text'>@</span>
+        <input
+          className='form-control'
+          type='text'
+          value={props.userName}
+          onChange={(e) => setUserName(e.target.value)}
+          placeholder='your@email.com'
+        />
+      </div>
+      <div className='input-group mb-3'>
+        <span className='input-group-text'>🔒</span>
+        <input
+          className='form-control'
+          type='password'
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder='password'
+        />
+      </div>
+      <button
+        type='button'
+        className='btn btn-primary'
+        onClick={() => loginUser()}
+      >
+        Login
+      </button>
+      <button
+        type='button'
+        className='btn btn-primary'
+        onClick={() => createUser()}
+      >
+        Create
+      </button>
+    </div>
+  );
+}
 
-  logout() {
+function PlayControls(props) {
+  const navigate = useNavigate();
+
+  function logout() {
     fetch(`/api/auth/logout`, {
       method: 'delete',
-    }).then(() => this.navigate('/'));
+    }).then(() => navigate('/'));
   }
 
-  async getUser(email) {
+  function play() {
+    navigate('/play');
+  }
+
+  return (
+    <div id='playControls'>
+      <div id='playerName'>{props.userName}</div>
+      <button type='button' className='btn btn-primary' onClick={() => play()}>
+        Play
+      </button>
+      <button
+        type='button'
+        className='btn btn-secondary'
+        onClick={() => logout()}
+      >
+        Logout
+      </button>
+    </div>
+  );
+}
+
+export function Login() {
+  async function getUser(email) {
     const response = await fetch(`/api/user/${email}`);
     if (response.status === 200) {
       return response.json();
@@ -76,87 +115,120 @@ export class Login extends React.Component {
     return null;
   }
 
-  setDisplay(controlId, display) {
-    const playControlEl = document.querySelector(`#${controlId}`);
-    if (playControlEl) {
-      playControlEl.style.display = display;
-    }
-  }
+  const [authenticated, setAuthenticated] = useState(false);
 
-  render() {
-    return (
-      <main className='container-fluid bg-secondary text-center'>
-        <div>
-          <h1>Welcome to Simon</h1>
-          <div id='loginControls' style={{ display: 'none' }}>
-            <div className='input-group mb-3'>
-              <span className='input-group-text'>@</span>
-              <input
-                className='form-control'
-                type='text'
-                id='userName'
-                placeholder='your@email.com'
-              />
-            </div>
-            <div className='input-group mb-3'>
-              <span className='input-group-text'>🔒</span>
-              <input
-                className='form-control'
-                type='password'
-                id='userPassword'
-                placeholder='password'
-              />
-            </div>
-            <button
-              type='button'
-              className='btn btn-primary'
-              onClick='{() => this.loginUser()}'
-            >
-              Login
-            </button>
-            <button
-              type='button'
-              className='btn btn-primary'
-              onClick='{() => this.createUser()}'
-            >
-              Create
-            </button>
-          </div>
-          <div id='playControls' style={{ display: 'none' }}>
-            <div id='playerName'></div>
-            <button
-              type='button'
-              className='btn btn-primary'
-              onClick='{() => this.play()}'
-            >
-              Play
-            </button>
-            <button
-              type='button'
-              className='btn btn-secondary'
-              onClick='{() => this.logout()}'
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-        <div className='modal fade' id='msgModal' tabindex='-1'>
-          <div className='modal-dialog modal-dialog-centered'>
-            <div className='modal-content text-dark'>
-              <div className='modal-body'>error message here</div>
-              <div className='modal-footer'>
-                <button
-                  type='button'
-                  className='btn btn-secondary'
-                  data-bs-dismiss='modal'
-                >
-                  Close
-                </button>
-              </div>
+  const userName = localStorage.getItem('userName');
+  useEffect(() => {
+    if (userName) {
+      async function isAuthenticated(userName) {
+        const user = await getUser(userName);
+        setAuthenticated(!!user?.authenticated);
+      }
+      isAuthenticated(userName);
+    }
+  }, [userName]);
+
+  return (
+    <main className='container-fluid bg-secondary text-center'>
+      <div>
+        <h1>Welcome to Simon</h1>
+        {authenticated ? (
+          <PlayControls playerName={userName} />
+        ) : (
+          <LoginControls playerName={userName} />
+        )}
+      </div>
+      <div className='modal fade' id='msgModal' tabIndex='-1'>
+        <div className='modal-dialog modal-dialog-centered'>
+          <div className='modal-content text-dark'>
+            <div className='modal-body'>error message here</div>
+            <div className='modal-footer'>
+              <button
+                type='button'
+                className='btn btn-secondary'
+                data-bs-dismiss='modal'
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
-      </main>
-    );
-  }
+      </div>
+    </main>
+  );
 }
+
+// return (
+//   <main className='container-fluid bg-secondary text-center'>
+//     <div>
+//       <h1>Welcome to Simon</h1>
+//       <div id='loginControls' style={{ display: 'none' }}>
+//         <div className='input-group mb-3'>
+//           <span className='input-group-text'>@</span>
+//           <input
+//             className='form-control'
+//             type='text'
+//             id='userName'
+//             placeholder='your@email.com'
+//           />
+//         </div>
+//         <div className='input-group mb-3'>
+//           <span className='input-group-text'>🔒</span>
+//           <input
+//             className='form-control'
+//             type='password'
+//             id='userPassword'
+//             placeholder='password'
+//           />
+//         </div>
+//         <button
+//           type='button'
+//           className='btn btn-primary'
+//           onClick={() => loginUser()}
+//         >
+//           Login
+//         </button>
+//         <button
+//           type='button'
+//           className='btn btn-primary'
+//           onClick={() => createUser()}
+//         >
+//           Create
+//         </button>
+//       </div>
+//       <div id='playControls' style={{ display: 'none' }}>
+//         <div id='playerName'></div>
+//         <button
+//           type='button'
+//           className='btn btn-primary'
+//           onClick={() => play()}
+//         >
+//           Play
+//         </button>
+//         <button
+//           type='button'
+//           className='btn btn-secondary'
+//           onClick={() => logout()}
+//         >
+//           Logout
+//         </button>
+//       </div>
+//     </div>
+//     <div className='modal fade' id='msgModal' tabIndex='-1'>
+//       <div className='modal-dialog modal-dialog-centered'>
+//         <div className='modal-content text-dark'>
+//           <div className='modal-body'>error message here</div>
+//           <div className='modal-footer'>
+//             <button
+//               type='button'
+//               className='btn btn-secondary'
+//               data-bs-dismiss='modal'
+//             >
+//               Close
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   </main>
+// );
