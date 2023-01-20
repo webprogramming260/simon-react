@@ -45,7 +45,7 @@ function LoginControl(props) {
           <input
             className='form-control'
             type='text'
-            value={props.userName}
+            value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder='your@email.com'
           />
@@ -74,6 +74,7 @@ function LoginControl(props) {
           Create
         </button>
       </div>
+
       <MessageDialog
         message={displayError}
         onHide={() => setDisplayError(null)}
