@@ -6,15 +6,20 @@ import { delay } from './delay';
 import './play.css';
 
 export function Play() {
-  return <Game />;
+  return <SimonGame />;
 }
 
-export class Game extends React.Component {
+// Event messages
+const GameEndEvent = 'gameEnd';
+const GameStartEvent = 'gameStart';
+
+export class SimonGame extends React.Component {
   #buttons;
   #allowPlayer;
   #sequence;
   #playerPlaybackPos;
   #mistakeSound;
+  #socket;
 
   constructor(props) {
     super(props);
@@ -24,6 +29,8 @@ export class Game extends React.Component {
     this.#sequence = [];
     this.#playerPlaybackPos = 0;
     this.#mistakeSound = new Audio(`/error.mp3`);
+
+    this.#configureWebSocket();
   }
 
   async pressButton(buttonId) {
@@ -57,6 +64,9 @@ export class Game extends React.Component {
     this.#addNote();
     await this.#playSequence(1000);
     this.#allowPlayer = true;
+
+    // Let other players know a new game has started
+    this.#broadcastEvent(this.#getPlayerName(), GameStartEvent, {});
   }
 
   async #playSequence(delayMs = 0) {
@@ -107,6 +117,9 @@ export class Game extends React.Component {
         body: JSON.stringify(newScore),
       });
 
+      // Let other players know the game has concluded
+      this.#broadcastEvent(userName, GameEndEvent, newScore);
+
       // Store what the service gave us as the high scores
       const scores = await response.json();
       localStorage.setItem('scores', JSON.stringify(scores));
@@ -144,20 +157,68 @@ export class Game extends React.Component {
   }
 
   componentDidMount() {
+    // These need to be converted to React components
     document.querySelectorAll('.game-button').forEach((el, i) => {
       this.#buttons.set(el.id, new SimonButton(el));
     });
 
+    // This should be passed in as a property
     const playerNameEl = document.querySelector('.player-name');
     playerNameEl.textContent = this.#getPlayerName();
+  }
+
+  #configureWebSocket() {
+    // When dev debugging we need to talk to the service and not the React debugger
+    let port = window.location.port;
+    if (process.env.NODE_ENV !== 'production') {
+      port = 3000;
+    }
+
+    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    this.#socket = new WebSocket(
+      `${protocol}://${window.location.hostname}:${port}/ws`
+    );
+    this.#socket.onopen = (event) => {
+      this.#displayMsg('system', 'game', 'connected');
+    };
+    this.#socket.onclose = (event) => {
+      this.#displayMsg('system', 'game', 'disconnected');
+    };
+    this.#socket.onmessage = async (event) => {
+      try {
+        const msg = JSON.parse(await event.data.text());
+        if (msg.type === GameEndEvent) {
+          this.#displayMsg('player', msg.from, `scored ${msg.value.score}`);
+        } else if (msg.type === GameStartEvent) {
+          this.#displayMsg('player', msg.from, `started a new game`);
+        }
+      } catch {}
+    };
+  }
+
+  #displayMsg(cls, from, msg) {
+    const chatText = document.querySelector('#player-messages');
+    chatText.innerHTML =
+      `<div class="event"><span class="${cls}-event">${from}</span> ${msg}</div>` +
+      chatText.innerHTML;
+  }
+
+  #broadcastEvent(from, type, value) {
+    const event = {
+      from: from,
+      type: type,
+      value: value,
+    };
+    this.#socket.send(JSON.stringify(event));
   }
 
   render() {
     return (
       <main className='bg-secondary'>
         <div className='players'>
-          Player:
+          Player
           <span className='player-name'></span>
+          <div id='player-messages'></div>
         </div>
         <div className='game'>
           <div className='button-container'>

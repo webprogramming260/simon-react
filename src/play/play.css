@@ -12,6 +12,23 @@
   color: rgb(118, 190, 210);
 }
 
+#player-messages {
+  padding-top: 0.25em;
+  opacity: 0.7;
+}
+
+.event {
+  color: rgb(69, 69, 69);
+}
+
+.player-event {
+  color: rgb(165, 220, 235);
+}
+
+.system-event {
+  color: rgb(221, 148, 40);
+}
+
 .game {
   background: rgb(0, 0, 0);
   border-radius: 50%;
