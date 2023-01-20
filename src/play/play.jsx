@@ -1,4 +1,8 @@
 import React from 'react';
+
+import { SimonButton } from './simonButton';
+import { delay } from './delay';
+
 import './play.css';
 
 export function Play() {
@@ -141,7 +145,7 @@ export class Game extends React.Component {
 
   componentDidMount() {
     document.querySelectorAll('.game-button').forEach((el, i) => {
-      this.#buttons.set(el.id, new Button(el));
+      this.#buttons.set(el.id, new SimonButton(el));
     });
 
     const playerNameEl = document.querySelector('.player-name');
@@ -196,27 +200,4 @@ export class Game extends React.Component {
       </main>
     );
   }
-}
-
-class Button {
-  constructor(el) {
-    this.el = el;
-    this.sound = new Audio(`/${el.id}.mp3`);
-  }
-
-  async press(delayMs = 500, playSound = true) {
-    this.el.classList.remove('light-on');
-    if (playSound) {
-      this.sound.play();
-    }
-    await delay(delayMs);
-    this.el.classList.add('light-on');
-    await delay(100);
-  }
-}
-
-function delay(milliseconds) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, milliseconds);
-  });
 }
