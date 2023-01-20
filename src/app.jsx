@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Route, Routes } from 'react-router-dom';
-import { Login } from './login';
+import { Login } from './login/login';
 import { Play } from './play';
 import { Scores } from './scores';
 import { About } from './about';
