@@ -59,20 +59,12 @@ function LoginControl(props) {
             placeholder='password'
           />
         </div>
-        <button
-          type='button'
-          className='btn btn-primary'
-          onClick={() => loginUser()}
-        >
+        <Button variant='primary' onClick={() => loginUser()}>
           Login
-        </button>
-        <button
-          type='button'
-          className='btn btn-secondary'
-          onClick={() => createUser()}
-        >
+        </Button>
+        <Button variant='secondary' onClick={() => createUser()}>
           Create
-        </button>
+        </Button>
       </div>
 
       <MessageDialog
@@ -110,16 +102,12 @@ function PlayControl(props) {
   return (
     <div id='playControls'>
       <div id='playerName'>{props.userName}</div>
-      <button type='button' className='btn btn-primary' onClick={() => play()}>
+      <Button variant='primary' onClick={() => play()}>
         Play
-      </button>
-      <button
-        type='button'
-        className='btn btn-secondary'
-        onClick={() => logout()}
-      >
+      </Button>
+      <Button variant='secondary' onClick={() => logout()}>
         Logout
-      </button>
+      </Button>
     </div>
   );
 }
