@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { NavLink, Route, Routes } from 'react-router-dom';
 import { Login } from './login/login';
 import { Play } from './play/play';
@@ -8,6 +9,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 function App() {
+  const [authenticated, setAuthenticated] = React.useState(false);
+  const setAuth = (authState) => setAuthenticated(authState);
+
   return (
     <div className='body bg-dark text-light'>
       <header className='container-fluid'>
@@ -21,16 +25,20 @@ function App() {
                 Login
               </NavLink>
             </li>
-            <li className='nav-item'>
-              <NavLink className='nav-link' to='play'>
-                Play
-              </NavLink>
-            </li>
-            <li className='nav-item'>
-              <NavLink className='nav-link' to='scores'>
-                Scores
-              </NavLink>
-            </li>
+            {authenticated && (
+              <li className='nav-item'>
+                <NavLink className='nav-link' to='play'>
+                  Play
+                </NavLink>
+              </li>
+            )}
+            {authenticated && (
+              <li className='nav-item'>
+                <NavLink className='nav-link' to='scores'>
+                  Scores
+                </NavLink>
+              </li>
+            )}
             <li className='nav-item'>
               <NavLink className='nav-link' to='about'>
                 About
@@ -41,7 +49,7 @@ function App() {
       </header>
 
       <Routes>
-        <Route path='/' element={<Login />} exact />
+        <Route path='/' element={<Login onAuthChange={setAuth} />} exact />
         <Route path='/play' element={<Play />} />
         <Route path='/scores' element={<Scores />} />
         <Route path='/about' element={<About />} />

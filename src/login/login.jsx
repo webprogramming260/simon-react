@@ -5,7 +5,7 @@ import { Unauthenticated } from './Unauthenticated';
 import { Authenticated } from './authenticated';
 import { AuthState } from './authState';
 
-export function Login() {
+export function Login({ onAuthChange }) {
   async function getUser(email) {
     const response = await fetch(`/api/user/${email}`);
     if (response.status === 200) {
@@ -14,23 +14,27 @@ export function Login() {
     return null;
   }
 
-  const [authState, setAuthState] = useState(AuthState.Unknown);
   const [userName, setUserName] = useState(localStorage.getItem('userName'));
+  const [authState, setAuthState] = useState(AuthState.Unknown);
+  const authChange = (state) => {
+    setAuthState(state);
+    onAuthChange(state === AuthState.Authenticated);
+  };
 
   // Asynchronously determine if the user is authenticated by calling the service
   useEffect(() => {
     if (userName) {
       async function isAuthenticated(userName) {
         const user = await getUser(userName);
-        setAuthState(
-          user?.authenticated
-            ? AuthState.Authenticated
-            : AuthState.Unauthenticated
-        );
+        const state = user?.authenticated
+          ? AuthState.Authenticated
+          : AuthState.Unauthenticated;
+        setAuthState(state);
+        onAuthChange(state === AuthState.Authenticated);
       }
       isAuthenticated(userName);
     }
-  }, [userName]);
+  }, [userName, onAuthChange]);
 
   return (
     <main className='container-fluid bg-secondary text-center'>
@@ -39,7 +43,7 @@ export function Login() {
         {authState === AuthState.Authenticated && (
           <Authenticated
             userName={userName}
-            onLogout={() => setAuthState(AuthState.Unauthenticated)}
+            onLogout={() => authChange(AuthState.Unauthenticated)}
           />
         )}
         {authState === AuthState.Unauthenticated && (
@@ -47,7 +51,7 @@ export function Login() {
             userName={userName}
             onLogin={(loginUserName) => {
               setUserName(loginUserName);
-              setAuthState(AuthState.Authenticated);
+              authChange(AuthState.Authenticated);
             }}
           />
         )}
