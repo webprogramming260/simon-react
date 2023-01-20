@@ -74,32 +74,24 @@ function LoginControl(props) {
           Create
         </button>
       </div>
-      <Modal centered show={displayError} onHide={() => setDisplayError(null)}>
-        <Modal.Body>{displayError}</Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setDisplayError(null)}>Close</Button>
-        </Modal.Footer>
-      </Modal>
+      <MessageDialog
+        message={displayError}
+        onHide={() => setDisplayError(null)}
+      />
     </>
   );
 }
 
-<div className='modal fade' id='msgModal' tabIndex='-1'>
-  <div className='modal-dialog modal-dialog-centered'>
-    <div className='modal-content text-dark'>
-      <div className='modal-body'>error message here</div>
-      <div className='modal-footer'>
-        <button
-          type='button'
-          className='btn btn-secondary'
-          data-bs-dismiss='modal'
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>;
+function MessageDialog(props) {
+  return (
+    <Modal {...props} show={props.message} centered>
+      <Modal.Body>{props.message}</Modal.Body>
+      <Modal.Footer>
+        <Button onClick={props.onHide}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
 
 function PlayControl(props) {
   const navigate = useNavigate();
