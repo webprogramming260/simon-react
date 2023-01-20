@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './scores.css';
+
 export class Scores extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +33,7 @@ export class Scores extends React.Component {
         scores.push(
           <tr key={i}>
             <td>{i}</td>
-            <td>{score.name}</td>
+            <td>{score.name.split('@')[0]}</td>
             <td>{score.score}</td>
             <td>{score.date}</td>
           </tr>
