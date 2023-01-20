@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import Button from 'react-bootstrap/Button';
 
-import './playControl.css';
+import './authenticated.css';
 
-export function PlayControl(props) {
+export function Authenticated(props) {
   const navigate = useNavigate();
 
   function logout() {

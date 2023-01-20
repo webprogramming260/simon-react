@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { MessageDialog } from './messageDialog';
 
-export function LoginControl(props) {
+export function Unauthenticated(props) {
   const [userName, setUserName] = useState(props.userName);
   const [password, setPassword] = useState('');
   const [displayError, setDisplayError] = React.useState(null);

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
-import { LoginControl } from './loginControl';
-import { PlayControl } from './playControl';
+import { Unauthenticated } from './Unauthenticated';
+import { Authenticated } from './authenticated';
 import { AuthState } from './authState';
 
 export function Login() {
@@ -37,13 +37,13 @@ export function Login() {
       <div>
         {authState !== AuthState.Unknown && <h1>Welcome to Simon</h1>}
         {authState === AuthState.Authenticated && (
-          <PlayControl
+          <Authenticated
             userName={userName}
             onLogout={() => setAuthState(AuthState.Unauthenticated)}
           />
         )}
         {authState === AuthState.Unauthenticated && (
-          <LoginControl
+          <Unauthenticated
             userName={userName}
             onLogin={(loginUserName) => {
               setUserName(loginUserName);
