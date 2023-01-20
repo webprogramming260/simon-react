@@ -1,13 +1,16 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { bootstrap } from 'bootstrap/dist/js/bootstrap.bundle.min';
+
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
 import './login.css';
 
-function LoginControls(props) {
-  const navigate = useNavigate();
+function LoginControl(props) {
   const [userName, setUserName] = useState(props.userName);
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState('');
+  const [displayError, setDisplayError] = React.useState(null);
 
   async function loginUser() {
     loginOrCreate(`/api/auth/login`);
@@ -25,64 +28,86 @@ function LoginControls(props) {
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
-    const body = await response.json();
     if (response?.status === 200) {
       localStorage.setItem('userName', userName);
-      navigate('/play');
+      props.onLogin(userName);
     } else {
-      const modalEl = document.querySelector('#msgModal');
-      modalEl.querySelector('.modal-body').textContent = `⚠ Error: ${body.msg}`;
-      const msgModal = new bootstrap.Modal(modalEl, {});
-      msgModal.show();
+      const body = await response.json();
+      setDisplayError(`⚠ Error: ${body.msg}`);
     }
   }
 
   return (
-    <div id='loginControls'>
-      <div className='input-group mb-3'>
-        <span className='input-group-text'>@</span>
-        <input
-          className='form-control'
-          type='text'
-          value={props.userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder='your@email.com'
-        />
+    <>
+      <div id='loginControls'>
+        <div className='input-group mb-3'>
+          <span className='input-group-text'>@</span>
+          <input
+            className='form-control'
+            type='text'
+            value={props.userName}
+            onChange={(e) => setUserName(e.target.value)}
+            placeholder='your@email.com'
+          />
+        </div>
+        <div className='input-group mb-3'>
+          <span className='input-group-text'>🔒</span>
+          <input
+            className='form-control'
+            type='password'
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder='password'
+          />
+        </div>
+        <button
+          type='button'
+          className='btn btn-primary'
+          onClick={() => loginUser()}
+        >
+          Login
+        </button>
+        <button
+          type='button'
+          className='btn btn-secondary'
+          onClick={() => createUser()}
+        >
+          Create
+        </button>
       </div>
-      <div className='input-group mb-3'>
-        <span className='input-group-text'>🔒</span>
-        <input
-          className='form-control'
-          type='password'
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder='password'
-        />
-      </div>
-      <button
-        type='button'
-        className='btn btn-primary'
-        onClick={() => loginUser()}
-      >
-        Login
-      </button>
-      <button
-        type='button'
-        className='btn btn-primary'
-        onClick={() => createUser()}
-      >
-        Create
-      </button>
-    </div>
+      <Modal centered show={displayError} onHide={() => setDisplayError(null)}>
+        <Modal.Body>{displayError}</Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setDisplayError(null)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 
-function PlayControls(props) {
+<div className='modal fade' id='msgModal' tabIndex='-1'>
+  <div className='modal-dialog modal-dialog-centered'>
+    <div className='modal-content text-dark'>
+      <div className='modal-body'>error message here</div>
+      <div className='modal-footer'>
+        <button
+          type='button'
+          className='btn btn-secondary'
+          data-bs-dismiss='modal'
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>;
+
+function PlayControl(props) {
   const navigate = useNavigate();
 
   function logout() {
     fetch(`/api/auth/logout`, {
       method: 'delete',
-    }).then(() => navigate('/'));
+    }).then(() => props.onLogout());
   }
 
   function play() {
@@ -116,8 +141,8 @@ export function Login() {
   }
 
   const [authenticated, setAuthenticated] = useState(false);
+  const [userName, setUserName] = useState(localStorage.getItem('userName'));
 
-  const userName = localStorage.getItem('userName');
   useEffect(() => {
     if (userName) {
       async function isAuthenticated(userName) {
@@ -133,102 +158,20 @@ export function Login() {
       <div>
         <h1>Welcome to Simon</h1>
         {authenticated ? (
-          <PlayControls playerName={userName} />
+          <PlayControl
+            userName={userName}
+            onLogout={() => setAuthenticated(false)}
+          />
         ) : (
-          <LoginControls playerName={userName} />
+          <LoginControl
+            userName={userName}
+            onLogin={(loginUserName) => {
+              setUserName(loginUserName);
+              setAuthenticated(true);
+            }}
+          />
         )}
-      </div>
-      <div className='modal fade' id='msgModal' tabIndex='-1'>
-        <div className='modal-dialog modal-dialog-centered'>
-          <div className='modal-content text-dark'>
-            <div className='modal-body'>error message here</div>
-            <div className='modal-footer'>
-              <button
-                type='button'
-                className='btn btn-secondary'
-                data-bs-dismiss='modal'
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   );
 }
-
-// return (
-//   <main className='container-fluid bg-secondary text-center'>
-//     <div>
-//       <h1>Welcome to Simon</h1>
-//       <div id='loginControls' style={{ display: 'none' }}>
-//         <div className='input-group mb-3'>
-//           <span className='input-group-text'>@</span>
-//           <input
-//             className='form-control'
-//             type='text'
-//             id='userName'
-//             placeholder='your@email.com'
-//           />
-//         </div>
-//         <div className='input-group mb-3'>
-//           <span className='input-group-text'>🔒</span>
-//           <input
-//             className='form-control'
-//             type='password'
-//             id='userPassword'
-//             placeholder='password'
-//           />
-//         </div>
-//         <button
-//           type='button'
-//           className='btn btn-primary'
-//           onClick={() => loginUser()}
-//         >
-//           Login
-//         </button>
-//         <button
-//           type='button'
-//           className='btn btn-primary'
-//           onClick={() => createUser()}
-//         >
-//           Create
-//         </button>
-//       </div>
-//       <div id='playControls' style={{ display: 'none' }}>
-//         <div id='playerName'></div>
-//         <button
-//           type='button'
-//           className='btn btn-primary'
-//           onClick={() => play()}
-//         >
-//           Play
-//         </button>
-//         <button
-//           type='button'
-//           className='btn btn-secondary'
-//           onClick={() => logout()}
-//         >
-//           Logout
-//         </button>
-//       </div>
-//     </div>
-//     <div className='modal fade' id='msgModal' tabIndex='-1'>
-//       <div className='modal-dialog modal-dialog-centered'>
-//         <div className='modal-content text-dark'>
-//           <div className='modal-body'>error message here</div>
-//           <div className='modal-footer'>
-//             <button
-//               type='button'
-//               className='btn btn-secondary'
-//               data-bs-dismiss='modal'
-//             >
-//               Close
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   </main>
-// );

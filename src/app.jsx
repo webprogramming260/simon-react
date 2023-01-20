@@ -4,6 +4,7 @@ import { Login } from './login';
 import { Play } from './play';
 import { Scores } from './scores';
 import { About } from './about';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 function App() {
