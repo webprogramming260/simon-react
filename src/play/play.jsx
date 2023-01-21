@@ -14,6 +14,7 @@ const GameEndEvent = 'gameEnd';
 const GameStartEvent = 'gameStart';
 
 export class SimonGame extends React.Component {
+  #userName;
   #buttons;
   #allowPlayer;
   #sequence;
@@ -24,6 +25,7 @@ export class SimonGame extends React.Component {
   constructor(props) {
     super(props);
 
+    this.#userName = props.userName;
     this.#buttons = new Map();
     this.#allowPlayer = false;
     this.#sequence = [];
@@ -66,7 +68,7 @@ export class SimonGame extends React.Component {
     this.#allowPlayer = true;
 
     // Let other players know a new game has started
-    this.#broadcastEvent(this.#getPlayerName(), GameStartEvent, {});
+    this.#broadcastEvent(this.#userName(), GameStartEvent, {});
   }
 
   async #playSequence(delayMs = 0) {
@@ -76,10 +78,6 @@ export class SimonGame extends React.Component {
     for (const btn of this.#sequence) {
       await btn.press();
     }
-  }
-
-  #getPlayerName() {
-    return localStorage.getItem('userName') ?? 'Mystery player';
   }
 
   #addNote() {
@@ -106,9 +104,8 @@ export class SimonGame extends React.Component {
   }
 
   async #saveScore(score) {
-    const userName = this.#getPlayerName();
     const date = new Date().toLocaleDateString();
-    const newScore = { name: userName, score: score, date: date };
+    const newScore = { name: this.#userName, score: score, date: date };
 
     try {
       const response = await fetch('/api/score', {
@@ -118,7 +115,7 @@ export class SimonGame extends React.Component {
       });
 
       // Let other players know the game has concluded
-      this.#broadcastEvent(userName, GameEndEvent, newScore);
+      this.#broadcastEvent(this.#userName, GameEndEvent, newScore);
 
       // Store what the service gave us as the high scores
       const scores = await response.json();
@@ -161,10 +158,6 @@ export class SimonGame extends React.Component {
     document.querySelectorAll('.game-button').forEach((el, i) => {
       this.#buttons.set(el.id, new SimonButton(el));
     });
-
-    // This should be passed in as a property
-    const playerNameEl = document.querySelector('.player-name');
-    playerNameEl.textContent = this.#getPlayerName();
   }
 
   #configureWebSocket() {
@@ -217,7 +210,7 @@ export class SimonGame extends React.Component {
       <main className='bg-secondary'>
         <div className='players'>
           Player
-          <span className='player-name'></span>
+          <span className='player-name'>{this.#userName}</span>
           <div id='player-messages'></div>
         </div>
         <div className='game'>

@@ -14,14 +14,10 @@ export function Authenticated(props) {
     }).then(() => props.onLogout());
   }
 
-  function play() {
-    navigate('/play');
-  }
-
   return (
     <div>
       <div className='playerName'>{props.userName}</div>
-      <Button variant='primary' onClick={() => play()}>
+      <Button variant='primary' onClick={() => navigate('/play')}>
         Play
       </Button>
       <Button variant='secondary' onClick={() => logout()}>
