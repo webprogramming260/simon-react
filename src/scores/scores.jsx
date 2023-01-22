@@ -5,26 +5,28 @@ import './scores.css';
 export function Scores() {
   const [scores, setScores] = React.useState([]);
 
-  // Get the latest high scores from the service
-  fetch('/api/scores')
-    .then((response) => response.json())
-    .then((scores) => {
-      setScores(scores);
-      // Save the scores in case we go offline in the future
-      localStorage.setItem('scores', JSON.stringify(scores));
-    })
-    .catch(() => {
-      // If there was an error then just use the last saved scores
-      const scoresText = localStorage.getItem('scores');
-      if (scoresText) {
-        setScores(JSON.parse(scoresText));
-      }
-    });
+  // Demonstrates calling a service asynchronously so that
+  // React can properly update state objects with the results.
+  React.useEffect(() => {
+    fetch('/api/scores')
+      .then((response) => response.json())
+      .then((scores) => {
+        setScores(scores);
+        localStorage.setItem('scores', JSON.stringify(scores));
+      })
+      .catch(() => {
+        const scoresText = localStorage.getItem('scores');
+        if (scoresText) {
+          setScores(JSON.parse(scoresText));
+        }
+      });
+  }, []);
 
   // Demonstrates rendering an array with React
+  const scoreRows = [];
   if (scores.length) {
     for (const [i, score] of scores.entries()) {
-      scores.push(
+      scoreRows.push(
         <tr key={i}>
           <td>{i}</td>
           <td>{score.name.split('@')[0]}</td>
@@ -34,7 +36,7 @@ export function Scores() {
       );
     }
   } else {
-    scores.push(
+    scoreRows.push(
       <tr key='0'>
         <td colSpan='4'>Be the first to score</td>
       </tr>
@@ -52,7 +54,7 @@ export function Scores() {
             <th>Date</th>
           </tr>
         </thead>
-        <tbody id='scores'>{scores}</tbody>
+        <tbody id='scores'>{scoreRows}</tbody>
       </table>
     </main>
   );

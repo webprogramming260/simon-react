@@ -13,99 +13,84 @@ export function Play() {
 const GameEndEvent = 'gameEnd';
 const GameStartEvent = 'gameStart';
 
-export class SimonGame extends React.Component {
-  #userName;
-  #buttons;
-  #allowPlayer;
-  #sequence;
-  #playerPlaybackPos;
-  #mistakeSound;
-  #socket;
+export function SimonGame(props) {
+  const userName = props.userName;
+  const buttons = new Map();
+  const mistakeSound = new Audio(`/error.mp3`);
+  let socket;
 
-  constructor(props) {
-    super(props);
+  const [allowPlayer, setAllowPlayer] = React.useState(false);
+  const [sequence, setSequence] = React.useState([]);
+  const [playbackPos, setPlaybackPos] = React.useState(0);
 
-    this.#userName = props.userName;
-    this.#buttons = new Map();
-    this.#allowPlayer = false;
-    this.#sequence = [];
-    this.#playerPlaybackPos = 0;
-    this.#mistakeSound = new Audio(`/error.mp3`);
+  configureWebSocket();
 
-    this.#configureWebSocket();
-  }
+  async function onPressed(buttonPosition) {
+    if (allowPlayer) {
+      setAllowPlayer(false);
+      await buttons.get(buttonPosition).ref.current.press();
 
-  async pressButton(buttonId) {
-    if (this.#allowPlayer) {
-      this.#allowPlayer = false;
-      await this.#buttons.get(buttonId).press();
-
-      if (this.#sequence[this.#playerPlaybackPos].el.id === buttonId) {
-        this.#playerPlaybackPos++;
-        if (this.#playerPlaybackPos === this.#sequence.length) {
-          this.#playerPlaybackPos = 0;
-          this.#addNote();
-          this.#updateScore(this.#sequence.length - 1);
-          await this.#playSequence(500);
+      if (sequence[playbackPos].position === buttonPosition) {
+        if (playbackPos + 1 === sequence.length) {
+          setPlaybackPos(0);
+          increaseSequence(sequence);
+        } else {
+          setPlaybackPos(playbackPos + 1);
+          setAllowPlayer(true);
         }
-        this.#allowPlayer = true;
       } else {
-        this.#saveScore(this.#sequence.length - 1);
-        this.#mistakeSound.play();
-        await this.#buttonDance();
+        saveScore(sequence.length - 1);
+        mistakeSound.play();
+        await buttonDance();
       }
     }
   }
 
-  async reset() {
-    this.#allowPlayer = false;
-    this.#playerPlaybackPos = 0;
-    this.#sequence = [];
-    this.#updateScore('--');
-    await this.#buttonDance(1);
-    this.#addNote();
-    await this.#playSequence(1000);
-    this.#allowPlayer = true;
+  async function reset() {
+    setAllowPlayer(false);
+    setPlaybackPos(0);
+    await buttonDance(1);
+    increaseSequence([]);
 
     // Let other players know a new game has started
-    this.#broadcastEvent(this.#userName(), GameStartEvent, {});
+    broadcastEvent(userName, GameStartEvent, {});
   }
 
-  async #playSequence(delayMs = 0) {
-    if (delayMs > 0) {
-      await delay(delayMs);
-    }
-    for (const btn of this.#sequence) {
-      await btn.press();
-    }
+  function increaseSequence(previousSequence) {
+    const newSequence = [...previousSequence, getRandomButton()];
+    setSequence(newSequence);
   }
 
-  #addNote() {
-    const btn = this.#getRandomButton();
-    this.#sequence.push(btn);
-  }
+  // Demonstrates updating state objects based on changes to other state.
+  // All setState calls are asynchronous and so you need to wait until
+  // that state is updated before you can update dependent functionality.
+  React.useEffect(() => {
+    const playSequence = async () => {
+      await delay(500);
+      for (const btn of sequence) {
+        await btn.ref.current.press();
+      }
+      setAllowPlayer(true);
+    };
+    playSequence();
+  }, [sequence]);
 
-  #updateScore(score) {
-    const scoreEl = document.querySelector('#score');
-    scoreEl.textContent = score;
-  }
-
-  async #buttonDance(laps = 5) {
+  async function buttonDance(laps = 5) {
     for (let step = 0; step < laps; step++) {
-      for (const btn of this.#buttons.values()) {
-        await btn.press(100, false);
+      for (const btn of buttons.values()) {
+        await btn.ref.current.press(100, false);
       }
     }
   }
 
-  #getRandomButton() {
-    let buttons = Array.from(this.#buttons.values());
-    return buttons[Math.floor(Math.random() * this.#buttons.size)];
+  function getRandomButton() {
+    let b = Array.from(buttons.values());
+    return b[Math.floor(Math.random() * b.length)];
   }
 
-  async #saveScore(score) {
+  async function saveScore(score) {
     const date = new Date().toLocaleDateString();
-    const newScore = { name: this.#userName, score: score, date: date };
+    const newScore = { name: userName, score: score, date: date };
 
     try {
       const response = await fetch('/api/score', {
@@ -115,18 +100,18 @@ export class SimonGame extends React.Component {
       });
 
       // Let other players know the game has concluded
-      this.#broadcastEvent(this.#userName, GameEndEvent, newScore);
+      broadcastEvent(userName, GameEndEvent, newScore);
 
       // Store what the service gave us as the high scores
       const scores = await response.json();
       localStorage.setItem('scores', JSON.stringify(scores));
     } catch {
       // If there was an error then just track scores locally
-      this.#updateScoresLocal(newScore);
+      updateScoresLocal(newScore);
     }
   }
 
-  #updateScoresLocal(newScore) {
+  function updateScoresLocal(newScore) {
     let scores = [];
     const scoresText = localStorage.getItem('scores');
     if (scoresText) {
@@ -153,14 +138,7 @@ export class SimonGame extends React.Component {
     localStorage.setItem('scores', JSON.stringify(scores));
   }
 
-  componentDidMount() {
-    // These need to be converted to React components
-    document.querySelectorAll('.game-button').forEach((el, i) => {
-      this.#buttons.set(el.id, new SimonButton(el));
-    });
-  }
-
-  #configureWebSocket() {
+  function configureWebSocket() {
     // When dev debugging we need to talk to the service and not the React debugger
     let port = window.location.port;
     if (process.env.NODE_ENV !== 'production') {
@@ -168,90 +146,71 @@ export class SimonGame extends React.Component {
     }
 
     const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
-    this.#socket = new WebSocket(
-      `${protocol}://${window.location.hostname}:${port}/ws`
-    );
-    this.#socket.onopen = (event) => {
-      this.#displayMsg('system', 'game', 'connected');
+    socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
+    socket.onopen = (event) => {
+      displayMsg('system', 'game', 'connected');
     };
-    this.#socket.onclose = (event) => {
-      this.#displayMsg('system', 'game', 'disconnected');
+    socket.onclose = (event) => {
+      displayMsg('system', 'game', 'disconnected');
     };
-    this.#socket.onmessage = async (event) => {
+    socket.onmessage = async (event) => {
       try {
         const msg = JSON.parse(await event.data.text());
         if (msg.type === GameEndEvent) {
-          this.#displayMsg('player', msg.from, `scored ${msg.value.score}`);
+          displayMsg('player', msg.from, `scored ${msg.value.score}`);
         } else if (msg.type === GameStartEvent) {
-          this.#displayMsg('player', msg.from, `started a new game`);
+          displayMsg('player', msg.from, `started a new game`);
         }
       } catch {}
     };
   }
 
-  #displayMsg(cls, from, msg) {
-    const chatText = document.querySelector('#player-messages');
-    chatText.innerHTML =
-      `<div class="event"><span class="${cls}-event">${from}</span> ${msg}</div>` +
-      chatText.innerHTML;
+  function displayMsg(cls, from, msg) {
+    // const chatText = document.querySelector('player-messages');
+    // chatText.innerHTML =
+    //   `<div class="event"><span class="${cls}-event">${from}</span> ${msg}</div>` + chatText.innerHTML;
   }
 
-  #broadcastEvent(from, type, value) {
+  function broadcastEvent(from, type, value) {
     const event = {
       from: from,
       type: type,
       value: value,
     };
-    this.#socket.send(JSON.stringify(event));
+    socket.send(JSON.stringify(event));
   }
 
-  render() {
-    return (
-      <main className='bg-secondary'>
-        <div className='players'>
-          Player
-          <span className='player-name'>{this.#userName}</span>
-          <div id='player-messages'></div>
-        </div>
-        <div className='game'>
-          <div className='button-container'>
-            <button
-              id='button-top-left'
-              className='game-button button-top-left'
-              onClick={() => this.pressButton('button-top-left')}
-            ></button>
-            <button
-              id='button-top-right'
-              className='game-button button-top-right'
-              onClick={() => this.pressButton('button-top-right')}
-            ></button>
-            <button
-              id='button-bottom-left'
-              className='game-button button-bottom-left'
-              onClick={() => this.pressButton('button-bottom-left')}
-            ></button>
-            <button
-              id='button-bottom-right'
-              className='game-button button-bottom-right'
-              onClick={() => this.pressButton('button-bottom-right')}
-            ></button>
-            <div className='controls center'>
-              <div className='game-name'>
-                Simon<sup>&reg;</sup>
-              </div>
-              <div id='score' className='score center'>
-                --
-              </div>
-              <button
-                className='button button-primary'
-                onClick={() => this.reset()}
-              >
-                Reset
-              </button>
+  // We use React refs so the game can drive button press events
+  buttons.set('button-top-left', { position: 'button-top-left', ref: React.useRef() });
+  buttons.set('button-top-right', { position: 'button-top-right', ref: React.useRef() });
+  buttons.set('button-bottom-left', { position: 'button-bottom-left', ref: React.useRef() });
+  buttons.set('button-bottom-right', { position: 'button-bottom-right', ref: React.useRef() });
+
+  const buttonArray = Array.from(buttons, ([key, value]) => {
+    return <SimonButton key={key} ref={value.ref} position={key} onPressed={() => onPressed(key)}></SimonButton>;
+  });
+
+  return (
+    <main className='bg-secondary'>
+      <div className='players'>
+        Player
+        <span className='player-name'>{userName}</span>
+        <div id='player-messages'></div>
+      </div>
+      <div className='game'>
+        <div className='button-container'>
+          <>{buttonArray}</>
+          <div className='controls center'>
+            <div className='game-name'>
+              Simon<sup>&reg;</sup>
             </div>
+            <div className='score center'>{sequence.length === 0 ? '--' : sequence.length - 1}</div>
+            <button className='button button-primary' onClick={() => reset()}>
+              Reset
+            </button>
           </div>
         </div>
-      </main>
-    );
-  }
+      </div>
+    </main>
+  );
 }

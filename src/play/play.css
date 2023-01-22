@@ -101,8 +101,12 @@
 
 .game-name {
   font-size: 2em;
-  font-weight: bold;
+  font-weight: normal;
   margin-bottom: 0.5em;
+}
+
+.game-name sup {
+  font-weight: 100;
 }
 
 .score {
