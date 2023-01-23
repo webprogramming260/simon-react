@@ -3,27 +3,23 @@ import React from 'react';
 import { SimonButton } from './simonButton';
 import { delay } from './delay';
 
+import { GameEvent, GameNotifier } from '../gameEventNotifier';
 import './play.css';
 
-export function Play() {
-  return <SimonGame />;
+export function Play(props) {
+  return <SimonGame userName={props.userName} />;
 }
 
-// Event messages
-const GameEndEvent = 'gameEnd';
-const GameStartEvent = 'gameStart';
-
 export function SimonGame(props) {
+  console.log('Creating simon game');
   const userName = props.userName;
   const buttons = new Map();
   const mistakeSound = new Audio(`/error.mp3`);
-  let socket;
 
   const [allowPlayer, setAllowPlayer] = React.useState(false);
   const [sequence, setSequence] = React.useState([]);
   const [playbackPos, setPlaybackPos] = React.useState(0);
-
-  configureWebSocket();
+  const [events, setEvent] = React.useState([]);
 
   async function onPressed(buttonPosition) {
     if (allowPlayer) {
@@ -53,7 +49,7 @@ export function SimonGame(props) {
     increaseSequence([]);
 
     // Let other players know a new game has started
-    broadcastEvent(userName, GameStartEvent, {});
+    GameNotifier.broadcastEvent(userName, GameEvent.Start, {});
   }
 
   function increaseSequence(previousSequence) {
@@ -100,7 +96,7 @@ export function SimonGame(props) {
       });
 
       // Let other players know the game has concluded
-      broadcastEvent(userName, GameEndEvent, newScore);
+      GameNotifier.broadcastEvent(userName, GameEvent.End, newScore);
 
       // Store what the service gave us as the high scores
       const scores = await response.json();
@@ -138,46 +134,37 @@ export function SimonGame(props) {
     localStorage.setItem('scores', JSON.stringify(scores));
   }
 
-  function configureWebSocket() {
-    // When dev debugging we need to talk to the service and not the React debugger
-    let port = window.location.port;
-    if (process.env.NODE_ENV !== 'production') {
-      port = 3000;
+  React.useEffect(() => {
+    GameNotifier.addHandler(handleGameEvent);
+    //    GameNotifier.events.forEach((e) => displayGameEvent(e));
+
+    return () => {
+      GameNotifier.removeHandler(handleGameEvent);
+    };
+  });
+
+  function handleGameEvent(event) {
+    setEvent([...events, event]);
+  }
+
+  function createMessageArray() {
+    const messageArray = [];
+    for (const [i, event] of events.entries()) {
+      let message = 'unknown';
+      if (event.type === GameEvent.End) {
+        message = `scored ${event.value.score}`;
+      } else if (event.type === GameEvent.Start) {
+        message = `started a new game`;
+      }
+
+      messageArray.push(
+        <div key={i} className='event'>
+          <span className={'player-event'}>{event.from}</span>
+          {message}
+        </div>
+      );
     }
-
-    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
-    socket = new WebSocket(`${protocol}://${window.location.hostname}:${port}/ws`);
-    socket.onopen = (event) => {
-      displayMsg('system', 'game', 'connected');
-    };
-    socket.onclose = (event) => {
-      displayMsg('system', 'game', 'disconnected');
-    };
-    socket.onmessage = async (event) => {
-      try {
-        const msg = JSON.parse(await event.data.text());
-        if (msg.type === GameEndEvent) {
-          displayMsg('player', msg.from, `scored ${msg.value.score}`);
-        } else if (msg.type === GameStartEvent) {
-          displayMsg('player', msg.from, `started a new game`);
-        }
-      } catch {}
-    };
-  }
-
-  function displayMsg(cls, from, msg) {
-    // const chatText = document.querySelector('player-messages');
-    // chatText.innerHTML =
-    //   `<div class="event"><span class="${cls}-event">${from}</span> ${msg}</div>` + chatText.innerHTML;
-  }
-
-  function broadcastEvent(from, type, value) {
-    const event = {
-      from: from,
-      type: type,
-      value: value,
-    };
-    socket.send(JSON.stringify(event));
+    return messageArray;
   }
 
   // We use React refs so the game can drive button press events
@@ -195,7 +182,7 @@ export function SimonGame(props) {
       <div className='players'>
         Player
         <span className='player-name'>{userName}</span>
-        <div id='player-messages'></div>
+        <div id='player-messages'>{createMessageArray()}</div>
       </div>
       <div className='game'>
         <div className='button-container'>
