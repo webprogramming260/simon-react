@@ -1,12 +1,12 @@
 import React from 'react';
 
+import { Button } from 'react-bootstrap';
 import { SimonButton } from './simonButton';
 import { delay } from './delay';
 import { GameEvent, GameNotifier } from './gameNotifier';
 import './simonGame.css';
 
 export function SimonGame(props) {
-  console.log('Creating simon game');
   const userName = props.userName;
   const buttons = new Map();
   const mistakeSound = new Audio(`/error.mp3`);
@@ -55,14 +55,16 @@ export function SimonGame(props) {
   // All setState calls are asynchronous and so you need to wait until
   // that state is updated before you can update dependent functionality.
   React.useEffect(() => {
-    const playSequence = async () => {
-      await delay(500);
-      for (const btn of sequence) {
-        await btn.ref.current.press();
-      }
-      setAllowPlayer(true);
-    };
-    playSequence();
+    if (sequence.length > 0) {
+      const playSequence = async () => {
+        await delay(500);
+        for (const btn of sequence) {
+          await btn.ref.current.press();
+        }
+        setAllowPlayer(true);
+      };
+      playSequence();
+    }
   }, [sequence]);
 
   async function buttonDance(laps = 5) {
@@ -147,9 +149,9 @@ export function SimonGame(props) {
             Simon<sup>&reg;</sup>
           </div>
           <div className='score center'>{sequence.length === 0 ? '--' : sequence.length - 1}</div>
-          <button className='button button-primary' onClick={() => reset()}>
+          <Button variant='primary' onClick={() => reset()}>
             Reset
-          </button>
+          </Button>
         </div>
       </div>
     </div>

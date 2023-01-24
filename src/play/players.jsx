@@ -28,6 +28,8 @@ export function Players(props) {
         message = `scored ${event.value.score}`;
       } else if (event.type === GameEvent.Start) {
         message = `started a new game`;
+      } else if (event.type === GameEvent.System) {
+        message = event.value.msg;
       }
 
       messageArray.push(
