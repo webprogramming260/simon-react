@@ -36,6 +36,7 @@ class PeerProxy {
             connections.splice(i, 1);
             return true;
           }
+          return false;
         });
       });
 
