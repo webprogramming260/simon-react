@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
@@ -7,7 +6,7 @@ import { MessageDialog } from './messageDialog';
 export function Unauthenticated(props) {
   const [userName, setUserName] = useState(props.userName);
   const [password, setPassword] = useState('');
-  const [displayError, setDisplayError] = React.useState(null);
+  const [displayError, setDisplayError] = useState(null);
 
   async function loginUser() {
     loginOrCreate(`/api/auth/login`);
@@ -64,10 +63,7 @@ export function Unauthenticated(props) {
         </Button>
       </div>
 
-      <MessageDialog
-        message={displayError}
-        onHide={() => setDisplayError(null)}
-      />
+      <MessageDialog message={displayError} onHide={() => setDisplayError(null)} />
     </>
   );
 }
