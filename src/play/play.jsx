@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Players } from './players';
 import { SimonGame } from './simonGame';
-import './play.css';
 
 export function Play(props) {
   return (
