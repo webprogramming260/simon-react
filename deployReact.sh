@@ -17,11 +17,12 @@ printf "\n----> Deploying React bundle $service to $hostname with $key\n"
 
 # Step 1
 printf "\n----> Build the distribution package\n"
-npm run build
 rm -rf dist
 mkdir dist
-cp -rf build dist/public
-cp service/*.js dist
+npm install # make sure react-scripts is install so that we can bundle
+npm run build # build the React front end
+cp -rf build dist/public # move the React front end to the target distribution
+cp service/*.js dist # move the back end service to the target distribution
 cp service/package* dist
 
 # Step 2
