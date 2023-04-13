@@ -23,7 +23,7 @@ npm install # make sure react-scripts are installed so that we can bundle
 npm run build # build the React front end
 cp -rf build dist/public # move the React front end to the target distribution
 cp service/*.js dist # move the back end service to the target distribution
-cp service/package* dist
+cp service/*.json dist
 
 # Step 2
 printf "\n----> Clearing out previous distribution on the target\n"

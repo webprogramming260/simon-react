@@ -11,7 +11,14 @@ export function Authenticated(props) {
   function logout() {
     fetch(`/api/auth/logout`, {
       method: 'delete',
-    }).then(() => props.onLogout());
+    })
+      .catch(() => {
+        // Logout failed. Assuming offline
+      })
+      .finally(() => {
+        localStorage.removeItem('userName');
+        props.onLogout();
+      });
   }
 
   return (

@@ -1,20 +1,22 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
+const config = require('./dbConfig.json');
 
-const userName = process.env.MONGOUSER;
-const password = process.env.MONGOPASSWORD;
-const hostname = process.env.MONGOHOSTNAME;
-
-if (!userName) {
-  throw Error('Database not configured. Set environment variables');
-}
-
-const url = `mongodb+srv://${userName}:${password}@${hostname}`;
-
+const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
-const userCollection = client.db('simon').collection('user');
-const scoreCollection = client.db('simon').collection('score');
+const db = client.db('simon');
+const userCollection = db.collection('user');
+const scoreCollection = db.collection('score');
+
+// This will asynchronously test the connection and exit the process if it fails
+(async function testConnection() {
+  await client.connect();
+  await db.command({ ping: 1 });
+})().catch((ex) => {
+  console.log(`Unable to connect to database with ${url} because ${ex.message}`);
+  process.exit(1);
+});
 
 function getUser(email) {
   return userCollection.findOne({ email: email });
