@@ -91,7 +91,8 @@ secureApiRouter.get('/scores', async (req, res) => {
 
 // SubmitScore
 secureApiRouter.post('/score', async (req, res) => {
-  await DB.addScore(req.body);
+  const score = { ...req.body, ip: req.socket.remoteAddress };
+  await DB.addScore(score);
   const scores = await DB.getHighScores();
   res.send(scores);
 });
