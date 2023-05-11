@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import React from 'react';
 
 import Button from 'react-bootstrap/Button';
-import { MessageDialog } from './messageDialog';
+import {MessageDialog} from './messageDialog';
 
 export function Unauthenticated(props) {
-  const [userName, setUserName] = useState(props.userName);
-  const [password, setPassword] = useState('');
-  const [displayError, setDisplayError] = useState(null);
+  const [userName, setUserName] = React.useState(props.userName);
+  const [password, setPassword] = React.useState('');
+  const [displayError, setDisplayError] = React.useState(null);
 
   async function loginUser() {
     loginOrCreate(`/api/auth/login`);
@@ -19,7 +19,7 @@ export function Unauthenticated(props) {
   async function loginOrCreate(endpoint) {
     const response = await fetch(endpoint, {
       method: 'post',
-      body: JSON.stringify({ email: userName, password: password }),
+      body: JSON.stringify({email: userName, password: password}),
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
