@@ -21,10 +21,10 @@ export function About(props) {
       })
       .catch();
 
-    fetch('https://api.quotable.io/random')
+    fetch('https://quote.cs260.click')
       .then((response) => response.json())
       .then((data) => {
-        setQuote(data.content);
+        setQuote(data.quote);
         setQuoteAuthor(data.author);
       })
       .catch();
@@ -43,14 +43,11 @@ export function About(props) {
           {imgEl}
         </div>
 
-        <p>
-          Simon is a repetitive memory game where you follow the demonstrated color sequence until you make a mistake.
-          The longer the sequence you repeat, the greater your score.
-        </p>
+        <p>Simon is a repetitive memory game where you follow the demonstrated color sequence until you make a mistake. The longer the sequence you repeat, the greater your score.</p>
 
         <p>
-          The name Simon is a registered trademark of Milton-Bradley. Our use of the name and the game is for non-profit
-          educational use only. No part of this code or application may be used outside of that definition.
+          The name Simon is a registered trademark of Milton-Bradley. Our use of the name and the game is for non-profit educational use only. No part of this code or application may be used outside
+          of that definition.
         </p>
 
         <div className='quote-box bg-light text-dark'>
