@@ -84,23 +84,10 @@ export function SimonGame(props) {
     const date = new Date().toLocaleDateString();
     const newScore = { name: userName, score: score, date: date };
 
-    try {
-      const response = await fetch('/api/score', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify(newScore),
-      });
+    // Let other players know the game has concluded
+    GameNotifier.broadcastEvent(userName, GameEvent.End, newScore);
 
-      // Let other players know the game has concluded
-      GameNotifier.broadcastEvent(userName, GameEvent.End, newScore);
-
-      // Store what the service gave us as the high scores
-      const scores = await response.json();
-      localStorage.setItem('scores', JSON.stringify(scores));
-    } catch {
-      // If there was an error then just track scores locally
-      updateScoresLocal(newScore);
-    }
+    updateScoresLocal(newScore);
   }
 
   function updateScoresLocal(newScore) {
@@ -112,7 +99,7 @@ export function SimonGame(props) {
 
     let found = false;
     for (const [i, prevScore] of scores.entries()) {
-      if (newScore > prevScore.score) {
+      if (newScore.score > prevScore.score) {
         scores.splice(i, 0, newScore);
         found = true;
         break;

@@ -17,7 +17,11 @@ export function Players(props) {
   });
 
   function handleGameEvent(event) {
-    setEvent([...events, event]);
+    let newEvents = [event, ...events];
+    if (newEvents.length > 10) {
+      newEvents = newEvents.slice(1, 10);
+    }
+    setEvent(newEvents);
   }
 
   function createMessageArray() {
