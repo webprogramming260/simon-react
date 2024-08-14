@@ -9,17 +9,13 @@ export function Unauthenticated(props) {
   const [displayError, setDisplayError] = React.useState(null);
 
   async function loginUser() {
-    if (userName && password) {
-      localStorage.setItem('userName', userName);
-      props.onLogin(userName);
-    }
+    localStorage.setItem('userName', userName);
+    props.onLogin(userName);
   }
 
   async function createUser() {
-    if (userName && password) {
-      localStorage.setItem('userName', userName);
-      props.onLogin(userName);
-    }
+    localStorage.setItem('userName', userName);
+    props.onLogin(userName);
   }
 
   return (
