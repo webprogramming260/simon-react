@@ -14,14 +14,16 @@ export function Players(props) {
     return () => {
       GameNotifier.removeHandler(handleGameEvent);
     };
-  });
+  }, []);
 
   function handleGameEvent(event) {
-    let newEvents = [event, ...events];
-    if (newEvents.length > 10) {
-      newEvents = newEvents.slice(1, 10);
-    }
-    setEvent(newEvents);
+    setEvent((prevEvents) => {
+      let newEvents = [event, ...prevEvents];
+      if (newEvents.length > 10) {
+        newEvents = newEvents.slice(1, 10);
+      }
+      return newEvents;
+    });
   }
 
   function createMessageArray() {
